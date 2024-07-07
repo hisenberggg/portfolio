@@ -30,38 +30,80 @@ const Timeline: React.FC = () => {
   // Example data for timeline items
   const timelineItems: TimelineItemProps[] = [
     {
-      title: "Product Engineer",
+      title: "Product Engineer - AI Developer",
       subtitle: "TCS - Advance Drug Development (ADD) platform",
-      date: "Jun 2022 - July 2024",
+      date: "Jan 2023 - July 2024",
       content: "",
       isRight: false
     },
     {
         title: "Systems Engineer",
         subtitle: "TCS - Advance Drug Development (ADD) platform",
-        date: "Jun 2022 - July 2024",
+        date: "Jun 2022 - Dec 2023",
         content: "",
         isRight: false
-      },
+    },
     {
-      title: "Intern",
-      subtitle: "Product Engineer",
-      date: "Jun 2019 - Dec 2019",
-      content: "Assisted in the development of internal tools to improve the efficiency of the development team. Participated in code reviews and contributed to the design of new features.",
+      title: "Smart India Hackathon winner",
+      subtitle: "",
+      date: "Jun 2022",
+      content: "",
       isRight: true
     },
     {
       title: "Freelance Developer",
-      subtitle: "Product Engineer",
-      date: "Jan 2018 - May 2019",
-      content: "Worked on various freelance projects, including website development, plugin creation, and API integration. Delivered high-quality solutions to clients.",
+      subtitle: "Change is us",
+      date: "Feb 2022 - Mar 2022",
+      content: "",
       isRight: false
     },
     {
-      title: "Freelance Developer",
-      subtitle: "Product Engineer",
-      date: "Jan 2018 - May 2019",
-      content: "Worked on various freelance projects, including website development, plugin creation, and API integration. Delivered high-quality solutions to clients.",
+      title: "Back-end Developer intern",
+      subtitle: "Looseleaf",
+      date: "Aug 2021 - Feb 2022",
+      content: "",
+      isRight: true
+    },
+    {
+      title: "Training and Placement coordinator",
+      subtitle: "D.B.I.T",
+      date: "May 2021 - Mar 2022",
+      content: "",
+      isRight: false
+    },
+    {
+      title: "Technical Head",
+      subtitle: "Computer Society of India - D.B.I.T",
+      date: "Jun 2020 - Jun 2021",
+      content: "",
+      isRight: true
+    },
+    {
+      title: "Technical Head",
+      subtitle: "Colosseum: Techfest - D.B.I.T",
+      date: "Jan 2021 - Mar 2021",
+      content: "",
+      isRight: false
+    },
+    {
+      title: "Reporting Head",
+      subtitle: "DOMAIN: Math Club - D.B.I.T",
+      date: "Jun 2020 - Jun 2021",
+      content: "",
+      isRight: true
+    },
+    {
+      title: "Publicity Head",
+      subtitle: "Physics Club - D.B.I.T",
+      date: "Jun 2020 - Jun 2021",
+      content: "",
+      isRight: false
+    },
+    {
+      title: "Under-grad student",
+      subtitle: "D.B.I.T",
+      date: "Jun 2018 - May 2022",
+      content: "",
       isRight: true
     },
   ];

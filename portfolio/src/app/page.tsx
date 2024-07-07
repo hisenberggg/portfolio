@@ -27,11 +27,11 @@ const Home = () => {
       <br />
       <br />
       <br />
+      <div id="work"></div>
       <br />
 
-      <div id="work"></div>
       <Timeline/>
-      {/* <OppositeContentTimeline/> */}
+
     </div>
     
   )

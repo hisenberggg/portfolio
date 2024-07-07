@@ -1,10 +1,11 @@
-// pages/projects.tsx
-const Work = () => {
+
+
+const Projects = () => {
   return (
     <div>
-      <h1>Work Page</h1>
+      <h1>Projects Page</h1>
     </div>
   )
 }
 
-export default Work;
+export default Projects;

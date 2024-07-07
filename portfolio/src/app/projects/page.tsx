@@ -1,0 +1,10 @@
+// pages/projects.tsx
+const Work = () => {
+  return (
+    <div>
+      <h1>Work Page</h1>
+    </div>
+  )
+}
+
+export default Work;

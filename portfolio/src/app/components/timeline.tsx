@@ -1,5 +1,6 @@
 // components/Timeline.tsx
 import React from 'react';
+import "./homepage.css";
 
 interface TimelineItemProps {
   title: string;
@@ -17,7 +18,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, subtitle, date, cont
       <h1 className="mx-auto font-semibold text-lg text-white">•</h1>
     </div>
     {/* Timeline item content */}
-    <div className={`order-1 bg-gray-800 rounded-lg shadow-xl lg:w-5/12 w-full px-6 py-4 ${isRight ? "lg:text-right" : "lg:text-left"} text-left`}>
+    <div className={`gloweffect order-1 bg-gray-800 rounded-lg shadow-xl lg:w-5/12 w-full px-6 py-4 ${isRight ? "lg:text-right" : "lg:text-left"} text-left`}>
       <h3 className="mb-1 font-bold text-white text-xl">{title}</h3>
       <h6 className="mb-1 text-white text-xs">{subtitle}</h6>
       <span className="text-sm text-gray-400">{date}</span>

@@ -3,26 +3,33 @@ import ProjectCard from "./components/card";
 const Projects = () => {
   const projects = [
     {
-      image: 'images/smartdoorlock.png', // Replace with your image URLs
+      image: 'images/smartdoorlock.png', 
       title: 'Smart Door Lock system',
       description: "Developed a door lock system enabled with facial recognition and live voice assistant support.",
       techStack: ['Python', 'OpenCV', 'NLTK'],
       url: '/projects/sdl',
     },
     {
-      image: 'images/innovex.png', // Replace with your image URLs
+      image: 'images/innovex.png', 
       title: 'Innovex - Project exhibition',
       description: "Developed an online project exhibition platform for showcasing final year projects at DBIT during the covid times. view site: innovex.dbit.in",
       techStack: ['Django', 'OAuth', 'AWS EC2'],
       url: '/projects/innovex'
     },
     {
-      image: 'images/kartme.png', // Replace with your image URLs
+      image: 'images/kartme.png', 
       title: 'Kartme - Ecommerce website',
       description: "Developed a easy setup template for building ecommerce apps.",
       techStack: ['Django', 'Bootstrap', 'Database modelling'],
       url: '/projects/kartme'
     },
+    // {
+    //   image: 'images/kartme.png', 
+    //   title: 'Kartme - Ecommerce website',
+    //   description: "Developed a easy setup template for building ecommerce apps.",
+    //   techStack: ['Django', 'Bootstrap', 'Database modelling'],
+    //   url: '/projects/kartme'
+    // },
 
     // Add more projects here
   ];

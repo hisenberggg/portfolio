@@ -102,7 +102,7 @@ const Timeline: React.FC = () => {
     },
     {
       title: "Under-grad student",
-      subtitle: "D.B.I.T",
+      subtitle: "Don Bosco Institute of Technology (D.B.I.T)",
       date: "Jun 2018 - May 2022",
       content: "",
       isRight: true

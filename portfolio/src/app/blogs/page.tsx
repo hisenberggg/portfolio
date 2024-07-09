@@ -1,35 +1,57 @@
+// app/blogs/page.tsx
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import Link from 'next/link';
 
-const Blogs = () => {
-  return (
-    <div>
-      <h1>Blogs Page</h1>
-    </div>
-  )
+interface Post {
+  slug: string;
+  title: string;
+  date: string;
+  tags: string[];
+  description: string;
+  author: string;
 }
 
-export default Blogs;
+const getPosts = (): Post[] => {
+  const postsDirectory = path.join(process.cwd(), 'src/app/blogs/posts');
+  const filenames = fs.readdirSync(postsDirectory);
 
+  return filenames.map((filename) => {
+    const filePath = path.join(postsDirectory, filename);
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const { data } = matter(fileContents);
 
+    return {
+      ...data,
+      slug: filename.replace(/\.mdx?$/, ''),
+    } as Post;
+  });
+};
 
-{/* <div className="container mx-auto px-4 py-8">
-  <h1 className="text-3xl font-bold mb-8">Blogs</h1>
-  {blogPosts.map((post) => (
-    <div key={post.slug} className="mb-8">
-      <h2 className="text-2xl font-bold">{post.title}</h2>
-      <p className="text-gray-200">{new Date(post.date).toLocaleDateString()}</p>
-      <div className="flex flex-wrap mb-2">
-        {post.tags.map((tag: string) => (
-          <span key={tag} className="bg-gray-400 text-gray-700 text-sm font-semibold mr-2 mb-2 px-2.5 py-0.9 rounded">
-            {tag}
-          </span>
-        ))}
-      </div>
-      <p>{post.description}</p>
-      <p>By: {post.author}</p>
-      <Link href={`/blogs/${post.slug}`} className="text-blue-500">
-        Read more
-      </Link>
-      <hr className="my-4" />
+const BlogsPage = () => {
+  const posts = getPosts();
+
+  return (
+    <div className="container mx-auto p-8">
+      <h1 className="text-4xl font-bold mb-8">Blogs</h1>
+      {posts.map((post) => (
+        <div key={post.slug} className="mb-8">
+          <h2 className="text-2xl font-semibold">{post.title}</h2>
+          <p>{post.date}</p>
+          <div className="flex space-x-2">
+            {post.tags.map(tag => <span key={tag} className="bg-gray-500 px-2 py-0.2 rounded">{tag}</span>)}
+          </div>
+          <p>{post.description}</p>
+          <p>By: {post.author}</p>
+          <Link className="text-blue-500" href={`/blogs/${post.slug}`}>
+            Read more
+          </Link>
+          <hr className="mt-4" />
+        </div>
+      ))}
     </div>
-  ))}
-</div> */}
+  );
+};
+
+export default BlogsPage;

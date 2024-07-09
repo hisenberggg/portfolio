@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { useState, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 
 
 export function Navbar() {
@@ -11,6 +12,9 @@ export function Navbar() {
     setActivePath(path);
     setIsOpen(false); // Close the menu on link click in mobile view
   }, []);
+
+  const pathname = usePathname();
+  // console.log("PATH: ",pathname);
 
   const linkClasses = useCallback(
     (path: string) => `px-3 py-2 rounded-md text-sm font-medium ${activePath === path ? 'border-b-4 border-[#3471d6]' : ''}`,

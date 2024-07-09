@@ -13,7 +13,7 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      typography: (theme) => ({
+      typography: (theme: (arg0: string) => any) => ({
         white: {
           css: {
             color: theme('colors.white'),

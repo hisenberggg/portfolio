@@ -8,11 +8,3 @@ author: "Abhijeet Ringe"
 
 # Federated Learning
 
-In this blog post well understand federated learning.
-
-```python
-import flwr
-
-def makeflwr():
-  return 1
-```

@@ -95,15 +95,15 @@ Enough of theory, let's move to the implementation part.
 
 The most popular libraries for graph building and analytics are:
 
-- Networkx
-- igraphs
-- Neo4j
-- Graphi
+- <a href="https://networkx.org/documentation/stable/index.html">Networkx</a>
+- <a href="https://python.igraph.org/en/stable/">igraphs</a>
+- <a href="https://neo4j.com/product/graphql-library/">Neo4j</a>
+- <a href="https://graphviz.org/documentation/">Graphi</a>
 
 and some popular GNN libraries are:
 
-- PyTorch Geometric (PyG)
-- Deep Graph Library (DGL)
+- <a href="https://pytorch-geometric.readthedocs.io/en/latest/">PyTorch Geometric (PyG)</a>
+- <a href="https://docs.dgl.ai/" >Deep Graph Library (DGL)</a>
 
 Let’s a build the graph of the users from our recommendation system and visualize it using Networkx.
 
@@ -128,3 +128,199 @@ G.add_edge('Chris', 'David', weight=3.0)
 plt.figure(figsize=(7, 5))
 nx.draw_networkx(G, with_labels=True, node_size=1500)
 ```
+![networkx graph](../../../../images/blogs/gnn/networkx1.png)
+
+You can play some more with it by changing the layout and adding weights on the edges:
+```python
+plt.figure(figsize=(7, 5))
+
+pos = nx.shell_layout(G)
+nx.draw_networkx_nodes(G, pos, node_size=1000 )
+nx.draw_networkx_labels(G, pos, font_size=10)
+nx.draw_networkx_edges(
+    G, pos, edge_color="grey",
+    arrows=True,
+)
+
+attr_name = "weight"
+labels = {
+    tuple(edge): f"{attr_name}={attrs[attr_name]}"
+    for *edge, attrs in G.edges(data=True)
+}
+nx.draw_networkx_edge_labels(
+    G,
+    pos,
+    labels,
+    label_pos=0.5,
+    font_color="white",
+    bbox={"alpha": 1},
+)
+```
+
+![networkx graph](../../../../images/blogs/gnn/networkx2.png)
+
+Just as we added “weight” as an attribute to the edges, we can even add attributes to the nodes.
+```python
+# Adding Age as an attribute to each node
+G.nodes["Alex"]["Age"] = 14
+G.nodes["Bob"]["Age"] = 15
+G.nodes["Chris"]["Age"] = 16
+G.nodes["David"]["Age"] = 16
+```
+
+**But why do we assign attributes to the nodes?** The answer to this question lies within the working of a GNN. Let’s understand how exactly GNN processes a graph and subsequently helps solving the graph level, node level and edge level problems.
+
+## GNNs and Embeddings
+A GNN can be broadly used to learn a representation of the nodes in a graph. These representations are known as Node embeddings, Edge embeddings and Graph embeddings.
+
+> **What are Embedding?** Embeddings can be defined as the mathematical representation of discrete objects that encode semantic and contextual information in a compact and meaningful way, allowing machine learning algorithms to effectively analyze and understand the data.
+
+We can think of an embedding as a function that takes an input (such as a node in a graph) and outputs a vector of numbers. These embeddings are then used to map the graph in a lower dimension embedding space, so that similar nodes in the graph are embedded close to each other. For example, we can map a 3D vector to a 2D vector.
+
+![mapping](../../../../images/blogs/gnn/mapping.png)
+*The node u & v are encoded and mapped into embedding space [<a href="https://medium.com/the-modern-scientist/graph-neural-networks-series-part-3-node-embedding-36613cc967d5">source</a>]*
+
+Thus, assigning attributes to nodes helps generate accurate and comprehensive embeddings.
+
+If you’re familiar with Machine Learning, you likely know that embeddings are commonly used in a wide range of tasks. Thus, it offers a major advantage over other methods, as it can be trained using standard neural network optimization techniques.
+
+## Implementing GNN for Node Classification
+For this problem, we can arbitrarily consider our Recommendation system graph, with the data being augmented to thousands of nodes (users) and edges (relationships).
+
+Now we can classify the users that have inclination towards a certain category of products. We will use the Deep Graph Library (DGL) to build and train our model. We can directly import the NetworkX graph into DGL.
+```python
+import dgl
+
+g = dgl.from_networkx(G)
+```
+
+**Model building**: There are various types of GNNs, like Graph Convolutional Network, Message Passing Neural Network, Graph Attention Network. For this use case, we’ll be using <a href="https://tkipf.github.io/graph-convolutional-networks/">Graph Convolutional Network (GCN)</a>.
+
+Building GCN is similar to building a CNN, except for the pooling layers. We can build a simple GCN using inbuilt <a href="https://docs.dgl.ai/en/latest/generated/dgl.nn.pytorch.conv.GraphConv.html">GraphConv</a> layer offered by DGL and <a href="https://www.geeksforgeeks.org/activation-functions/">Relu</a> as our activation function.
+```python
+from dgl.nn import GraphConv
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class GCN(nn.Module):
+    def __init__(self, in_dim, hidden_dim, output_dim):
+        super(GCN, self).__init__()
+        self.conv1 = GraphConv(in_dim, hidden_dim)
+        self.conv2 = GraphConv(hidden_dim, output_dim)
+
+    def forward(self, g, in_dim):
+        h = self.conv1(g, in_dim)
+        h = F.relu(h)
+        h = self.conv2(g, h)
+        return h
+
+
+# Create the model with given dimensions
+input_dim = g.ndata["features"].shape[1]
+hidden_dim = 16     #hidden layers
+output_dim = dataset.num_classes
+
+model = GCN(input_features_dim, hidden_dim, output_dim)
+```
+
+We can compute the embeddings of the graph using this model even before training. Initially these embeddings on a 2D plain would look something like this:
+```python
+features = g.ndata["features"]
+emb = model(g,features)
+```
+![embeddings](../../../../images/blogs/gnn/result1.png)
+
+**Training and optimization**: As mentioned earlier, we can use standard neural network optimization algorithms when working with embeddings. For simplicity, we’ll use gradient descent as the optimization algorithm.
+
+The standard steps for gradient descent optimization go like-
+```Text
+Get features & labels from the graph
+
+for n epochs:
+  Forward pass - compute model predictions using features
+  compute loss by comparing predictions with actual labels 
+  Backpropagate - optimize
+```
+
+In each epoch, our main aim is to first compute the predictions using the model weights. Then compute the loss, by comparing the predictions with actual value using a loss function. Lastly, back-propagation step is to optimize our model weights so the loss is reduced in the next epochs. Hence when the loss is reduced, the accuracy of the model increases.
+
+We’ll use <a href="https://www.geeksforgeeks.org/what-is-cross-entropy-loss-function/">Cross entropy</a> as our loss function and <a href="https://www.geeksforgeeks.org/adam-optimizer/">Adam Optimizer</a> for back propagation task. Cross Entropy calculates loss between the prediction (p) and actual label (q) using the following equation:
+
+```
+-(ylog(p) + (1 - y)log(1 - p))
+```
+To know more about gradient descent, refer to this video by 3Blue1Brown — <a href="https://youtu.be/IHZwWFHWa-w">link</a>
+
+```python
+def train(g, model):
+    # define optimizer
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    
+    # Get features and labels
+    features = g.ndata["features"]
+    labels = g.ndata["label"]
+    
+    # define mask to determine whether the entry belongs to train/test/val
+    train_mask = g.ndata["train_mask"] 
+    val_mask = g.ndata["val_mask"]
+    test_mask = g.ndata["test_mask"]
+
+    # define number of epochs
+    epochs = 100
+    for e in range(epochs):
+
+        # Forwardpass - compute prediction ------
+        logits = model(g, features)
+        pred = logits.argmax(1)
+
+        # Compute loss ------
+        # Note that you should only compute the losses of the nodes in the training set.
+        loss = F.cross_entropy(logits[train_mask], labels[train_mask])
+
+        # Compute accuracy on training/validation/test
+        train_acc = (pred[train_mask] == labels[train_mask]).float().mean()
+        val_acc = (pred[val_mask] == labels[val_mask]).float().mean()
+        test_acc = (pred[test_mask] == labels[test_mask]).float().mean()
+        # Save the best validation accuracy and the corresponding test accuracy.
+        if best_val_acc < val_acc:
+            best_val_acc = val_acc
+            best_test_acc = test_acc
+
+        # Backward propagation ------
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if e % 5 == 0:
+            print(
+                f"In epoch {e}, loss: {loss:.3f}, val acc: {val_acc:.3f} (best {best_val_acc:.3f}), test acc: {test_acc:.3f} (best {best_test_acc:.3f})"
+            )
+
+
+model = GCN(input_feature_dim, hidden_dim, output_dim)
+train(g, model)
+```
+
+Now if we compute the embeddings, it will look something like this!
+
+![result](../../../../images/blogs/gnn/result2.png)
+
+Here, we can see the nodes being classified into groups.
+
+Kudos! We’ve got a fair intuition of how classification task work in GNNs!!
+
+Similarly, you can try Link prediction as well from examples here. The basic intuition behind the link prediction is to create a dataset by accumulating all the links (two nodes with an edge) as positive data and all the non-links (two nodes without an edge) as negative data and make the model learn the representations of each. With these representations being learnt, it can predict the probability of existence of an edge.
+
+Also check different GNN architectures <a href="https://theaisummer.com/gnn-architectures/">here</a>.
+
+## References:
+- <a href="https://journalofbigdata.springeropen.com/articles/10.1186/s40537-023-00876-4">A review of graph neural networks: concepts, architectures, techniques, challenges, datasets, applications, and future directions | Journal of Big Data | Full Text (springeropen.com)</a>
+
+- <a href="https://arxiv.org/abs/2108.10733">[2108.10733] Graph Neural Networks: Methods, Applications, and Opportunities (arxiv.org)</a>
+
+- <a href="https://theaisummer.com/gnn-architectures/">Best Graph Neural Network architectures: GCN, GAT, MPNN and more | AI Summer (theaisummer.com)</a>
+
+- <a href="https://medium.com/the-modern-scientist/graph-neural-networks-series-part-3-node-embedding-36613cc967d5">Graph Neural Networks Series | Part 3 | Node embedding | by Omar Hussein | The Modern Scientist | Medium</a>
+
+- <a href="https://docs.dgl.ai/en/latest/tutorials/blitz/1_introduction.html">Node Classification with DGL — DGL 2.3 documentation</a>

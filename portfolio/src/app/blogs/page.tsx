@@ -40,16 +40,19 @@ const BlogsPage = () => {
           <h2 className="text-2xl font-semibold">{post.title}</h2>
           <p>{post.date}</p>
           <div className="flex space-x-2">
-            {post.tags.map(tag => <span key={tag} className="bg-gray-500 px-2 py-0.2 rounded">{tag}</span>)}
+            {post.tags.map(tag => <span key={tag} className="bg-gray-500 px-1 py-0.01 rounded">{tag}</span>)}
           </div>
+          <br />
           <p>{post.description}</p>
-          <p>By: {post.author}</p>
+          <br />
+          <p>Author: {post.author}</p>
           <Link className="text-blue-500" href={`/blogs/${post.slug}`}>
             Read more
           </Link>
           <hr className="mt-4" />
         </div>
       ))}
+      <p>Data migration in progress...</p>
     </div>
   );
 };

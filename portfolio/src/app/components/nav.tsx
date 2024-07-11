@@ -7,14 +7,11 @@ import { usePathname } from 'next/navigation';
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [activePath, setActivePath] = useState('/');
+  const [activePath, setActivePath] = useState(usePathname());
   const handleClick = useCallback((path: string) => {
     setActivePath(path);
     setIsOpen(false); // Close the menu on link click in mobile view
   }, []);
-
-  const pathname = usePathname();
-  // console.log("PATH: ",pathname);
 
   const linkClasses = useCallback(
     (path: string) => `px-3 py-2 rounded-md text-sm font-medium ${activePath === path ? 'border-b-4 border-[#3471d6]' : ''}`,

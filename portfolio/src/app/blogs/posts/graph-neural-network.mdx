@@ -1,17 +1,130 @@
 ---
-title: "Graph Neural Network"
-date: "2024-07-18"
+title: "Unraveling Graph Neural Networks: A Comprehensive Guide"
+date: "2024-06-17"
 tags: ["graph", "neural networks", "social media"]
-description: "This is a short description of the first blog post."
+description: "In an era marked by great technological advancements and the exponential growth of artificial intelligence, the utilization of graph structures for data storage has...."
 author: "Abhijeet Ringe"
 ---
 
 # Graph Neural networks
 
-This is a post well discuss graph neural networks
+In an era marked by great technological advancements and the exponential growth of artificial intelligence, the utilization of graph structures for data storage has skyrocketed. There has also been substantial progress in algorithms and techniques for processing this data. In this article, we’ll explore Graph Neural Networks (GNNs), a revolutionary approach tailored for processing complex, graph-structured data.
+
+## Graphs
+Before starting, let’s quickly revise the features of a graph.
+
+- A Graph is the type of data structure that contains nodes and edges.
+- A node can be any entity (person, place, things, etc.), and the edges define the relationship between nodes <a href="https://www.geeksforgeeks.org/what-is-the-difference-between-an-undirected-and-a-directed-graph/">(Directed / Undirected)</a>.
+
+![image](../../../../images/blogs/gnn/grapheg.png)
+*Representation of a Graphical Data* 
+
+**Where do we find graphical data in real world?**
+
+- Recommendation System — social media / E-commerce platforms, where the users are interconnected by a relationship.
+- Biological Networks — Biological entities like proteins or genes are the node and interactions or relationships between these entities are the edges.
+- Computer Networks — LANs: Each machine is a node, and the communication links between these devices are the edges.
+
+**What real world problems can we solve with Graphical data and GNN?**
+
+- Recommendation System — Potential linkages between users can be predicted, Users can be clustered into groups by learning their behavioral patterns.
+- Biological Networks — Predicting a cancerous molecule by analyzing the patterns in its network or detecting an abnormal edge within the molecule.
+- Computer Networks — Predict future network traffic patterns, detect anomalies or unusual activities in the network or to optimize network routing.
+
+
+For this article, let's consider a Recommendation System
+![Recommendation system diagram](../../../../images/blogs/gnn/Recom_eg.png)
+
+The above graph has 2 entities (Users and Products) and multiple relationships (Bought, Viewed, Close friends, Friend, Similar, etc.)
+
+## GNN
+As we know, Convolutional Neural Networks (CNNs) excel at handling spatial data (Images and videos), while Recurrent Neural Networks (RNNs) are specialized for sequential data (Time series, Text). Similarly, Graph Neural Network (GNN) are the special type of neural networks that are highly proficient at processing and analyzing graphical data.
+
+Graph neural networks (GNNs) were first proposed by <a href="https://doi.org/10.1109/IJCNN.2005.1555942">Gori and Scarselli</a> in 2005, but only recently have they begun to gain traction. The implementation of GNNs ranged from recommendation systems in social networking platforms like Facebook & twitter, to storing knowledge base in graphical structure called Knowledge graphs.
+
+**But what was the need of introducing a new form of neural network? Can’t the traditional neural networks or CNNs, process Graphical data?**
+
+Traditional neural networks are adept in working with Euclidian data (Text & Image), and Euclidean data is something which can be represented in Euclidean space.
+
+In simple terms, graph is not a type of Euclidean data and thus, it cannot be processed using traditional neural networks.
+
+Refer to the below section in order to understand it in detail.
+
+<hr/>
+
+> <a href="https://www.britannica.com/science/Euclidean-space">Euclidean Space</a> — A space in any finite number of dimensions, in which points are designated by coordinates (one for each dimension) and the distance between two points is given by a distance formula. This concept primarily pertains to flat surfaces and emphasizes geometric relationships and positional accuracy i.e. Coordinates.
+
+![Euclidean space](../../../../images/blogs/gnn/euc_space.jpg)
+
+**But why is Graph not a Euclidean data structure? A graph can be represented in a 2D/3D space, right?** 🤔
+
+Well, it’s not that straight forward. Here’s the tea:
+
+Graph focuses on the nodes and the relationships, rather than specific geometric positions in a 2D/3D plane. So, representing it in a coordinate plane doesn’t make much sense as it will lead to distortions.
+
+Example: — Two nodes positioned close to each other in a 3D Euclidean space might suggest a close relationship. However, the actual closeness of the nodes should be based on the strength or quality of their relationship.
+
+In a Euclidean space, the shortest path between two nodes is simply a straight line connecting them. However, in a graph, the shortest path is determined by the aggregation of the weights of the edges along the path, rather than just the direct geometric distance.
+
+**Okay, but an image is also a graph of connected pixels, then a CNN should be able to process it, right?**
+
+NO! An image is topologically uniform graph of pixel. However, the graphs we discussed in above examples will NOT be uniform.
+
+To understand it better, have a look at how CNN works on an image.
+
+![CNN](../../../../images/blogs/gnn/conv.gif)
+
+Consider the 5x5 grid as an image. While processing images via CNNs, we slide the convolutional operator window (3x3 yellow grid) across a two-dimensional image, and we compute some function over that sliding window. Then, we pass it through many layers (pooling layer, dropout layer, etc.). Now imagine, sliding a fixed sized window on an undefined and complex topology of graphs, such as our Recommendation system above. An absolute nightmare!
+
+<hr/>
+
+## GNN use cases
+Now that we know what the graph data is, let’s hop on to the problems that a GNN can solve.
+
+Broadly these problems are divided into 3 categories:
+
+1. **Graph level**: Goal is to identify property of the entire graph. Assuming the analogy of an image as a graph of connected pixels, classify the whole image to determine whether it is a cat or a dog. Similarly, if we consider our recommendation system graph, it can be classified into a friend network (Instagram) or professional relationship network (LinkedIn).
+2. **Node level**: Focus is on predicting the identity or role of each node within a graph based on local and global context. For instance, in our recommendation system we can cluster various nodes (users) based on the closeness. We can even use it for classifying the users as spam or not spam.
+![nodelevel](../../../../images/blogs/gnn/nodelevel.png)
+3. **Edge level**: Focus is on making predictions or classifications for edges within a graph. For example, predicting the future connection and potential network within a social media/E-com recommendation.
+![edgelevel](../../../../images/blogs/gnn/edgelevel.png)
+
+## Graph Implementation
+
+Enough of theory, let's move to the implementation part.
+
+The most popular libraries for graph building and analytics are:
+
+- Networkx
+- igraphs
+- Neo4j
+- Graphi
+
+and some popular GNN libraries are:
+
+- PyTorch Geometric (PyG)
+- Deep Graph Library (DGL)
+
+Let’s a build the graph of the users from our recommendation system and visualize it using Networkx.
+
+Nodes (Users): Alex, Bob, Chris, David
+
+Edges (relationships): Close friends (weight=3), good friends (weight=2), friend (weight=1)
+
+
 
 ```python
-dgl = ggl_tostring()
-```
+import networkx as nx
 
-## Implementation
+# Create a new graph
+G = nx.Graph()
+
+# Add edges along with weights
+G.add_edge('Alex', 'Bob', weight=3.0)
+G.add_edge('Alex', 'Chris', weight=1.0)
+G.add_edge('Bob', 'Chris', weight=2.0)
+G.add_edge('Chris', 'David', weight=3.0)
+
+plt.figure(figsize=(7, 5))
+nx.draw_networkx(G, with_labels=True, node_size=1500)
+```

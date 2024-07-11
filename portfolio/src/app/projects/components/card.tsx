@@ -1,5 +1,6 @@
 // components/ProjectCard.tsx
 import React from 'react';
+import Link from 'next/link';
 
 interface ProjectCardProps {
   image: string;
@@ -11,7 +12,7 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ image, title, description, techStack, url }) => {
   return (
-    <a href={url} target='_blank'>
+    <Link href={`/projects/${url}`} >
     <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <img src={image} alt={title} className="w-full h-48 object-cover" />
       <div className="p-4">
@@ -29,7 +30,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ image, title, description, te
         </div>
       </div>
     </div>
-    </a>
+    </Link>
   );
 };
 

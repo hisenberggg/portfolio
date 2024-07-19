@@ -42,10 +42,9 @@ const BlogsPage = () => {
           <div className="flex space-x-2">
             {post.tags.map(tag => <span key={tag} className="bg-gray-500 px-1 py-0.01 rounded">{tag}</span>)}
           </div>
+          <u><p>Author: {post.author}</p></u>
           <br />
           <p>{post.description}</p>
-          <br />
-          <p>Author: {post.author}</p>
           <Link className="text-blue-500" href={`/blogs/${post.slug}`}>
             Read more
           </Link>

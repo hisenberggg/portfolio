@@ -31,6 +31,13 @@ const Timeline: React.FC = () => {
   // Example data for timeline items
   const timelineItems: TimelineItemProps[] = [
     {
+      title: "Master's in Computer Science",
+      subtitle: "Syracuse University",
+      date: "Aug 2024 - Currently Pursuing",
+      content: "",
+      isRight: false
+    },
+    {
       title: "Product Engineer - AI Developer",
       subtitle: "TCS - Advance Drug Development (ADD) platform",
       date: "Jan 2023 - July 2024",

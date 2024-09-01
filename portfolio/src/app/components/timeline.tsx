@@ -35,7 +35,7 @@ const Timeline: React.FC = () => {
       subtitle: "Syracuse University",
       date: "Aug 2024 - Currently Pursuing",
       content: "",
-      isRight: false
+      isRight: true
     },
     {
       title: "Product Engineer - AI Developer",

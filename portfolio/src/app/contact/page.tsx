@@ -7,7 +7,7 @@ import { FaLinkedin, FaEnvelope, FaCopy } from 'react-icons/fa';
 const Contact = () => {
   const profilePic = "/images/AbhijeetRinge.jpg"
   const [copied, setCopied] = useState(false);
-  const email = "ringeabhijeet@example.com";
+  const email = "ringeabhijeet9@gmail.com";
   const linkedinUrl = "https://www.linkedin.com/in/abhijeet-ringe/";
 
   const handleCopy = () => {

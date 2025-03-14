@@ -18,10 +18,21 @@ const Home = () => {
       </p>
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-wrap gap-4 justify-center">
-          <a href="https://www.linkedin.com/in/abhijeet-ringe/"><Box icon={<FaLinkedinIn  className="h-6 w-6 text-blue-500" />} text="LinkedIn" /></a>
-          <a href="https://github.com/hisenberggg"><Box icon={<FaGithub  className="h-6 w-6 text-blue-500" />} text="GitHub" /></a>
-          <a href="files/Abhijeet_Resume.pdf" download="Abhijeet_Ringe.pdf"><Box icon={<FaFileDownload   className="h-6 w-6 text-blue-500" />} text="Resume" /></a>  
-          <a href="#work"><Box icon={<FaAngleDoubleDown  className="h-6 w-6 text-blue-500" />} text="My Journey" /></a>              
+          <a href="https://www.linkedin.com/in/abhijeet-ringe/">
+            <Box icon={<FaLinkedinIn  className="h-6 w-6 text-blue-500" />} text="LinkedIn" />
+          </a>
+
+          <a href="https://github.com/hisenberggg">
+            <Box icon={<FaGithub  className="h-6 w-6 text-blue-500" />} text="GitHub" />
+          </a>
+
+          <a href="files/Abhijeet_Resume.pdf" download="Abhijeet_Ringe.pdf">
+            <Box icon={<FaFileDownload   className="h-6 w-6 text-blue-500" />} text="Resume" />
+          </a> 
+
+          <a href="#work">
+            <Box icon={<FaAngleDoubleDown  className="h-6 w-6 text-blue-500" />} text="My Journey" />
+          </a>              
         </div>
       </div>
       <br />

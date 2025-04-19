@@ -1,6 +1,5 @@
-// components/Timeline.tsx
-import React from 'react';
-import "./homepage.css";
+"use client";
+import React from "react";
 
 interface TimelineItemProps {
   title: string;
@@ -10,30 +9,40 @@ interface TimelineItemProps {
   isRight: boolean;
 }
 
-const TimelineItem: React.FC<TimelineItemProps> = ({ title, subtitle, date, content, isRight }) => (
-  <div className={`mb-8 flex justify-between items-center w-full ${isRight ? "lg:flex-row-reverse" : "lg:flex-row"} flex-col`}>
-    <div className="order-1 lg:w-5/12 w-full"></div>
-    {/* Circle element hidden in mobile view */}
-    <div className={`z-20 flex items-center order-1 bg-gray-800 shadow-xl w-8 h-8 rounded-full max-sm:hidden`}>
-      <h1 className="mx-auto font-semibold text-lg text-white">•</h1>
+const TimelineItem: React.FC<TimelineItemProps> = ({ title, subtitle, date, content, isRight }) => {
+  return (
+    <div
+      className={`flex flex-col lg:flex-row ${
+        isRight ? "lg:flex-row-reverse" : ""
+      } items-start mb-10 w-full relative`}
+      data-aos="fade-up"
+    >
+      {/* Dot — visible only on large screens */}
+      <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 z-10">
+        <div className="w-4 h-4 bg-[var(--accent)] rounded-full border-2 border-white" />
+      </div>
+
+      {/* Card */}
+      <div
+        className={`bg-[var(--surface)] text-[var(--text)] shadow-lg rounded-lg px-6 py-4 lg:w-5/12 w-full ml-5 ${
+          isRight ? "lg:text-right lg:mr-auto" : "lg:text-left lg:ml-auto"
+        }`}
+      >
+        <h3 className="font-bold text-xl mb-1">{title}</h3>
+        {subtitle && <h6 className="text-sm text-[var(--text-muted)] italic">{subtitle}</h6>}
+        <p className="text-sm text-[var(--text-muted)]">{date}</p>
+        {content && <p className="mt-2 text-sm">{content}</p>}
+      </div>
     </div>
-    {/* Timeline item content */}
-    <div className={`gloweffect order-1 bg-gray-800 rounded-lg shadow-xl lg:w-5/12 w-full px-6 py-4 ${isRight ? "lg:text-right" : "lg:text-left"} text-left`}>
-      <h3 className="mb-1 font-bold text-white text-xl">{title}</h3>
-      <h6 className="mb-1 text-white text-xs">{subtitle}</h6>
-      <span className="text-sm text-gray-400">{date}</span>
-      <div className="text-sm font-medium text-gray-300">{content}</div>
-    </div>
-  </div>
-);
+  );
+};
 
 const Timeline: React.FC = () => {
-  // Example data for timeline items
   const timelineItems: TimelineItemProps[] = [
     {
       title: "Master's in Computer Science",
       subtitle: "Syracuse University",
-      date: "Aug 2024 - Currently Pursuing",
+      date: "Aug 2024 - May 2026",
       content: "",
       isRight: true
     },
@@ -117,20 +126,14 @@ const Timeline: React.FC = () => {
   ];
 
   return (
-    <div className="container mx-auto w-full h-full">
-      <div className="relative wrap overflow-hidden p-10 h-full">
-        {/* Updated border styling */}
-        <div className="border-2-2 border-gray-800 absolute h-full border left-0 lg:left-1/2"></div>
-        {/* Render TimelineItems dynamically */}
-        {timelineItems.map((item, index) => (
-          <TimelineItem
-            key={index}
-            title={item.title}
-            subtitle={item.subtitle}
-            date={item.date}
-            content={item.content}
-            isRight={item.isRight}
-          />
+    <div className="container mx-auto px-4 py-12">
+      <div className="relative">
+        {/* vertical line */}
+        <div className="absolute left--1 lg:left-1/2 transform lg:-translate-x-1/2 w-1 bg-gray-700 h-full z-0" />
+        
+        {/* Timeline Items */}
+        {timelineItems.map((item, idx) => (
+          <TimelineItem key={idx} {...item} />
         ))}
       </div>
     </div>

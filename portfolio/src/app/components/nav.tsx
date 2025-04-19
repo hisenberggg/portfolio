@@ -2,10 +2,13 @@
 import Link from 'next/link';
 import { useState, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTheme } from './theme-context';
+import { FaSun, FaMoon } from 'react-icons/fa';
 
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { toggleTheme, theme } = useTheme();
 
   const [activePath, setActivePath] = useState(usePathname());
   const handleClick = useCallback((path: string) => {
@@ -55,6 +58,19 @@ export function Navbar() {
               </div>
             </div>
           </div>
+          
+          {/* theme - toggle button  */}
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full hover:bg-gray-700 text-white transition"
+              aria-label="Toggle Theme"
+            >
+              {theme === 'light' ? <FaMoon /> : <FaSun />}
+            </button>
+          </div>
+          {/* toggle button end  */}
+
         </div>
       </div>
       <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden`} id="mobile-menu">

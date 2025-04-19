@@ -4,6 +4,9 @@ import "./globals.css";
 import { Navbar } from "./components/nav";
 import Footer from "./components/footer"
 import { Analytics } from "@vercel/analytics/react"
+import { ThemeProvider } from "./components/theme-context";
+import AosInitializer from "./components/aos-init";
+import LoadingIndicator from "./components/loading-indicator";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,10 +26,14 @@ export default function RootLayout({
       <head>
       </head>
       <body className={inter.className}>
-        <Navbar />
-        <main>{children}</main>
-        <Analytics/>
-        <Footer/>
+        <ThemeProvider>
+          <AosInitializer />
+          <LoadingIndicator />
+          <Navbar />
+          <main>{children}</main>
+          <Analytics/>
+          <Footer/>
+        </ThemeProvider>
       </body>
     </html>
       

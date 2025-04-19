@@ -4,11 +4,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 const ThemeContext = createContext({ toggleTheme: () => {}, theme: "light" });
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
-    const initial = stored || "light";
+    const initial = stored || "dark";
     setTheme(initial);
     document.documentElement.setAttribute("data-theme", initial);
   }, []);

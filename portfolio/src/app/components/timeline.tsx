@@ -40,6 +40,13 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, subtitle, date, cont
 const Timeline: React.FC = () => {
   const timelineItems: TimelineItemProps[] = [
     {
+      title: "Software Engineering Intern",
+      subtitle: "Adobe",
+      date: "May 2025 - August 2025",
+      content: "",
+      isRight: false
+    },
+    {
       title: "Master's in Computer Science",
       subtitle: "Syracuse University",
       date: "Aug 2024 - May 2026",

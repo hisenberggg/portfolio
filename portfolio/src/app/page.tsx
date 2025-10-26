@@ -1,19 +1,59 @@
 // pages/index.tsx
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Timeline from "./components/timeline";
-import { FaLinkedinIn, FaGithub, FaAngleDoubleDown, FaFileDownload, FaEnvelope, FaCopy } from "react-icons/fa";
+import { FaLinkedinIn, FaGithub, FaAngleDoubleDown, FaFileDownload, FaEnvelope, FaCopy, FaCheck } from "react-icons/fa";
 import Image from 'next/image';
+import { Space_Mono } from 'next/font/google';
+
+const spaceMono = Space_Mono({ 
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 
 const Home = () => {
   const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
+  const [typewriterText, setTypewriterText] = useState("");
+  const [showCursor, setShowCursor] = useState(true);
   const email = "ringeabhijeet9@gmail.com";
+  const fullText = "turning ideas into impactful, intelligent products";
+
+  // Typewriter effect
+  useEffect(() => {
+    let currentIndex = 0;
+    const intervalId = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setTypewriterText(fullText.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(intervalId);
+        // Hide cursor after 500ms once typing is done
+        setTimeout(() => setShowCursor(false), 500);
+      }
+    }, 50); // Adjust speed here (lower = faster)
+
+    return () => clearInterval(intervalId);
+  }, [fullText]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownload = () => {
+    setDownloaded(true);
+    setTimeout(() => setDownloaded(false), 1000);
+    // Trigger download
+    const link = document.createElement('a');
+    link.href = '/files/Abhijeet_Ringe_Resume.pdf';
+    link.download = 'Abhijeet_Ringe.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 pt-24">
@@ -31,7 +71,9 @@ const Home = () => {
           </div>
       <h1 className="text-5xl font-bold mb-4">Hello <span className="waving-hand">👋</span></h1>
       <h1 className="text-5xl font-bold mb-4">I am Abhijeet </h1>
-      <p className="text-2xl mb-6 text-center max-w-2xl">Software Engineer and AI Enthusiast turning ideas into impactful, intelligent products.</p>
+      <p className="text-2xl mb-6 text-center max-w-2xl">
+        Software Engineer and AI Enthusiast <span className={`text-[var(--accent)] ${spaceMono.className}`}>{typewriterText}{showCursor && <span className="animate-pulse">|</span>}</span>
+      </p>
       {/* <p className="text-lg text-center max-w-2xl">
         I am a dedicated and skilled professional with a passion for developing innovative programs that expedite the efficiency and effectiveness of organizational success. Well-versed in technology and writing code to create systems that are reliable and user-friendly. Confident communicator, strategic thinker, and innovative creator to develop software that is customized to meet a company’s organizational needs, highlight their core competencies, and further their success.
       </p> */}
@@ -61,14 +103,17 @@ const Home = () => {
 
         {/* Resume and Journey buttons */}
         <div className="flex justify-center gap-4">
-          <a 
-            href="/files/Abhijeet_Ringe_Resume.pdf" 
-            download="Abhijeet_Ringe.pdf"
+          <button 
+            onClick={handleDownload}
             className="flex items-center justify-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-[var(--surface)] border border-gray-300 rounded-lg shadow-md hover:bg-[var(--accent)] hover:border-[var(--accent)] transition-all duration-300 w-36"
           >
-            <FaFileDownload className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
+            {downloaded ? (
+              <FaCheck className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />
+            ) : (
+              <FaFileDownload className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
+            )}
             <span className="text-sm sm:text-base font-medium">Resume</span>
-          </a>
+          </button>
 
           <a 
             href="#work"

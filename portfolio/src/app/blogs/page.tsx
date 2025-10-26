@@ -34,24 +34,24 @@ const BlogsPage = () => {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8">Blogs</h1>
+      <h1 className="text-4xl font-bold mb-8 text-[var(--text)]">Blogs</h1>
       {posts.map((post) => (
         <div key={post.slug} className="mb-8">
-          <h2 className="text-2xl font-semibold">{post.title}</h2>
-          <p>{post.date}</p>
+          <h2 className="text-2xl font-semibold text-[var(--text)]">{post.title}</h2>
+          <p className="text-[var(--text-muted)]">{post.date}</p>
           <div className="flex space-x-2">
-            {post.tags.map(tag => <span key={tag} className="bg-gray-500 px-1 py-0.01 rounded">{tag}</span>)}
+            {post.tags.map(tag => <span key={tag} className="bg-[var(--surface)] px-2 py-1 rounded text-[var(--text)]">{tag}</span>)}
           </div>
-          <u><p>Author: {post.author}</p></u>
+          <u><p className="text-[var(--text-muted)]">Author: {post.author}</p></u>
           <br />
-          <p>{post.description}</p>
-          <Link className="text-blue-500" href={`/blogs/${post.slug}`}>
+          <p className="text-[var(--text)]">{post.description}</p>
+          <Link className="text-[var(--accent)] hover:underline" href={`/blogs/${post.slug}`}>
             Read more
           </Link>
-          <hr className="mt-4" />
+          <hr className="mt-4 border-gray-700" />
         </div>
       ))}
-      <p>Data migration in progress...</p>
+      <p className="text-[var(--text-muted)]">Data migration in progress...</p>
     </div>
   );
 };

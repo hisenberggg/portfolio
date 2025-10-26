@@ -13,6 +13,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Abhijeet Ringe",
   description: "This is my portfolio website.",
+  openGraph: {
+    title: "Abhijeet Ringe - Software Engineer",
+    description: "I am a dedicated and skilled professional with a passion for developing innovative programs that expedite the efficiency and effectiveness of organizational success. Well-versed in technology and writing code to create systems that are reliable and user-friendly. Confident communicator, strategic thinker, and innovative creator to develop software that is customized to meet a company’s organizational needs, highlight their core competencies, and further their success.",
+    images: ["/images/logo.png"],
+  },
 };
 
 export default function RootLayout({

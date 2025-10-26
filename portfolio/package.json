@@ -25,7 +25,8 @@
     "rehype": "^13.0.1",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "resend": "^6.2.2"
   },
   "devDependencies": {
     "@types/aos": "^3.0.7",

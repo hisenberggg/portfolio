@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/router";
 
 const LoadingIndicator = () => {
   const [loading, setLoading] = useState(false);

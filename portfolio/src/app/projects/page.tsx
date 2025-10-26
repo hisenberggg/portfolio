@@ -35,20 +35,20 @@ const ProjectsPage = () => {
 
   return (
     <div className="container mx-auto p-4">
-       <h1 className="text-3xl font-bold text-white mb-8">Projects</h1>
+       <h1 className="text-3xl font-bold text-[var(--text)] mb-8">Projects</h1>
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
          {projects.map((project, index) => (
-          <ProjectCard
-            key={index}
-            image={project.imagepath}
-            title={project.title}
-            description={project.description}
-            techStack={project.techStack}
-            url={project.slug}
-          />
-        ))}
+           <ProjectCard
+             key={index}
+             image={project.imagepath}
+             title={project.title}
+             description={project.description}
+             techStack={project.techStack}
+             url={project.slug}
+           />
+         ))}
       </div>
-      <p>Data migration in progress...</p>
+      <p className="text-[var(--text-muted)]">Data migration in progress...</p>
     </div>
   );
 };

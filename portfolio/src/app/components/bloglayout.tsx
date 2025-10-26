@@ -3,7 +3,7 @@ import React from 'react';
 
 const BlogLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="container prose dark:prose-invert mx-auto px-4 py-8">
+    <div className="container prose mx-auto px-4 py-8">
       {children}
     </div>
   );

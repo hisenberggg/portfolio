@@ -16,9 +16,7 @@ const Home = () => {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
-      <br />
-      <br />
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 pt-24">
       {/* Profile Image */}
       <div className="flex justify-center mb-8">
             <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-300 shadow-lg">

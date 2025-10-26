@@ -16,7 +16,7 @@ const Contact = () => {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 pt-24">
       <div className="flex flex-col lg:flex-row items-center lg:items-start">
         <div className="mb-8 lg:mb-0 lg:mr-8">
           <Image 

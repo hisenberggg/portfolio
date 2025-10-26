@@ -33,7 +33,7 @@ const BlogsPage = () => {
   const posts = getPosts();
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-8 pt-24">
       <h1 className="text-4xl font-bold mb-8 text-[var(--text)]">Blogs</h1>
       {posts.map((post) => (
         <div key={post.slug} className="mb-8">

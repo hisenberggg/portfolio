@@ -19,13 +19,24 @@ const Home = () => {
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
       <br />
       <br />
-
+      {/* Profile Image */}
+      <div className="flex justify-center mb-8">
+            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-300 shadow-lg">
+              <Image 
+                src="/images/mypics/AbhijeetRinge2.jpg" 
+                alt="Abhijeet Ringe" 
+                className="object-cover"
+                fill
+                sizes="128px"
+              />
+            </div>
+          </div>
       <h1 className="text-5xl font-bold mb-4">Hello <span className="waving-hand">👋</span></h1>
       <h1 className="text-5xl font-bold mb-4">I am Abhijeet </h1>
-      <p className="text-2xl mb-6">Welcome to my portfolio.</p>
-      <p className="text-lg text-center max-w-2xl">
+      <p className="text-2xl mb-6 text-center max-w-2xl">Software Engineer and AI Enthusiast turning ideas into impactful, intelligent products.</p>
+      {/* <p className="text-lg text-center max-w-2xl">
         I am a dedicated and skilled professional with a passion for developing innovative programs that expedite the efficiency and effectiveness of organizational success. Well-versed in technology and writing code to create systems that are reliable and user-friendly. Confident communicator, strategic thinker, and innovative creator to develop software that is customized to meet a company’s organizational needs, highlight their core competencies, and further their success.
-      </p>
+      </p> */}
       <div className="container mx-auto px-4 py-8">
         {/* Circular social icons */}
         <div className="flex justify-center gap-6 mb-8">
@@ -86,7 +97,7 @@ const Home = () => {
           <div className="flex justify-center mb-8">
             <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-300 shadow-lg">
               <Image 
-                src="/images/AbhijeetRinge2.jpg" 
+                src="/images/mypics/AbhijeetRinge2.jpg" 
                 alt="Abhijeet Ringe" 
                 className="object-cover"
                 fill

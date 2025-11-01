@@ -1,8 +1,64 @@
 ---
 title: "Kartme"
 techStack: ["DB modelling", "Bootstrap", "Django"]
-description: "A quick setup template for Ecommerece application with admin access."
-imagepath: "images/kartme.png"
+description: "A ready-to-use Django store with admin access and shopper tools...know more"
+imagepath: "images/kartme/kartme.png"
 ---
-
 # Kartme
+
+Kartme is a Django e-commerce starter that helps me bring small shops online fast. It covers browsing, comparing, and buying inside a secure login so I can show a working store without weeks of setup.
+
+## Overview
+
+- **Goal**: Build a reusable store with login, product pages, cart, and orders ready to go.
+- **Role**: I handled the data design, safe login flow, Bootstrap screens, and admin setup.
+- **Outcome**: A demo-ready shop that I can clone, seed, and tailor in under an hour.
+
+## Tech Stack
+
+![Django](https://img.shields.io/badge/Django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-%237952B3.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-%23003B57.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+
+
+## What I Built
+
+- **Simple login and signup** with profile photos powered by Django auth.
+- **Product list and detail pages** with clear brand, price rules, and friendly cards.
+- **Category and price filters** on the home page so shoppers can find items quickly.
+- **Cart and checkout** that store items on the server and create `Order` records with status updates.
+- **Order history** where users can review or cancel their own purchases.
+
+## How It Works
+
+- Two Django apps split the work: `eshop` for shopping and `userauth` for accounts.
+- Models for `Product`, `Order`, and `Profile` keep catalog data, cart state, delivery steps, and user images.
+- Every store page uses `@login_required`, and Bootstrap templates keep the layout responsive.
+- SQLite runs local demos, and settings can switch to PostgreSQL or MySQL. Media uploads land in `products/` and `profile_pics/` folders.
+- A small jQuery script calls when add_to_cart and shows a toast when an item is added.
+- **Admin tools** through the Django admin site for fast product and order edits without code.
+
+## Implementation Notes
+
+- The cart flips an `in_cart` flag on each product so checkout logic stays easy to read.
+- Checkout reads quantities from a list, letting one request handle many line items.
+- Order status choices (received, shipped, delivered, etc.) prepare the app for tracking updates.
+- The filter form reads GET values, ignores bad input, and fills min/max boxes using `Min` and `Max` price queries.
+- Profile records are created right after signup, giving each user an avatar slot from day one.
+
+## Demo & Usage
+- **Video**: [Repository demo clip](https://github.com/user-attachments/assets/ebcd00e6-54de-4671-a311-d98108b82685)
+- **Try it locally**: Clone the repo, create a virtual environment, install `requirements.txt`, run migrations for `userauth` and `eshop`, then start `python manage.py runserver`.
+- **Admin access**: Create a superuser, visit `/admin`, and manage inventory, categories, and orders from the dashboard.
+
+## Screenshots
+
+![Home page with product cards](/images/kartme/1.png)
+![Product detail with add to cart button](/images/kartme/2.png)
+![Cart page showing totals](/images/kartme/3.png)
+
+## Impact and Next Steps
+
+- Helps me show full-stack delivery—auth, models, views, and UI—in real interviews.
+- Cuts my proof-of-concept time from days to hours because the main flows already work.
+- Next on the list: payment gateway hooks, product search, and simple dashboards for order and revenue insights.

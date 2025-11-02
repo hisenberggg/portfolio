@@ -2,26 +2,37 @@
 title: "Kartme"
 techStack: ["DB modelling", "Bootstrap", "Django"]
 description: "A ready-to-use Django store with admin access and shopper tools...know more"
-imagepath: "images/kartme/kartme.png"
+imagepath: "images/projects/kartme/kartme.png"
 ---
 # Kartme
 
 Kartme is a Django e-commerce starter that helps me bring small shops online fast. It covers browsing, comparing, and buying inside a secure login so I can show a working store without weeks of setup.
 
-## Overview
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [What I Built](#what-i-built)
+- [How It Works](#how-it-works)
+- [Implementation Notes](#implementation-notes)
+- [Demo & Usage](#demo--usage)
+- [Screenshots](#screenshots)
+- [Impact and Next Steps](#impact-and-next-steps)
+
+<h2 id="overview">Overview</h2>
 
 - **Goal**: Build a reusable store with login, product pages, cart, and orders ready to go.
 - **Role**: I handled the data design, safe login flow, Bootstrap screens, and admin setup.
 - **Outcome**: A demo-ready shop that I can clone, seed, and tailor in under an hour.
 
-## Tech Stack
+<h2 id="tech-stack">Tech Stack</h2>
 
 ![Django](https://img.shields.io/badge/Django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-%237952B3.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-%23003B57.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 
 
-## What I Built
+<h2 id="what-i-built">What I Built</h2>
 
 - **Simple login and signup** with profile photos powered by Django auth.
 - **Product list and detail pages** with clear brand, price rules, and friendly cards.
@@ -29,7 +40,7 @@ Kartme is a Django e-commerce starter that helps me bring small shops online fas
 - **Cart and checkout** that store items on the server and create `Order` records with status updates.
 - **Order history** where users can review or cancel their own purchases.
 
-## How It Works
+<h2 id="how-it-works">How It Works</h2>
 
 - Two Django apps split the work: `eshop` for shopping and `userauth` for accounts.
 - Models for `Product`, `Order`, and `Profile` keep catalog data, cart state, delivery steps, and user images.
@@ -38,7 +49,7 @@ Kartme is a Django e-commerce starter that helps me bring small shops online fas
 - A small jQuery script calls when add_to_cart and shows a toast when an item is added.
 - **Admin tools** through the Django admin site for fast product and order edits without code.
 
-## Implementation Notes
+<h2 id="implementation-notes">Implementation Notes</h2>
 
 - The cart flips an `in_cart` flag on each product so checkout logic stays easy to read.
 - Checkout reads quantities from a list, letting one request handle many line items.
@@ -46,18 +57,18 @@ Kartme is a Django e-commerce starter that helps me bring small shops online fas
 - The filter form reads GET values, ignores bad input, and fills min/max boxes using `Min` and `Max` price queries.
 - Profile records are created right after signup, giving each user an avatar slot from day one.
 
-## Demo & Usage
+<h2 id="demo--usage">Demo & Usage</h2>
 - **Video**: [Repository demo clip](https://github.com/user-attachments/assets/ebcd00e6-54de-4671-a311-d98108b82685)
 - **Try it locally**: Clone the repo, create a virtual environment, install `requirements.txt`, run migrations for `userauth` and `eshop`, then start `python manage.py runserver`.
 - **Admin access**: Create a superuser, visit `/admin`, and manage inventory, categories, and orders from the dashboard.
 - Github link - https://github.com/hisenberggg/Kart.me_ecom_website
-## Screenshots
+<h2 id="screenshots">Screenshots</h2>
 
-![Home page with product cards](/images/kartme/1.png)
-![Product detail with add to cart button](/images/kartme/2.png)
-![Cart page showing totals](/images/kartme/3.png)
+![Home page with product cards](/images/projects/kartme/1.png)
+![Product detail with add to cart button](/images/projects/kartme/2.png)
+![Cart page showing totals](/images/projects/kartme/3.png)
 
-## Impact and Next Steps
+<h2 id="impact-and-next-steps">Impact and Next Steps</h2>
 
 - Helps me show full-stack delivery—auth, models, views, and UI—in real interviews.
 - Cuts my proof-of-concept time from days to hours because the main flows already work.

@@ -2,7 +2,155 @@
 title: "Innovex"
 techStack: ["OAuth", "Django", "RBAC"]
 description: "An online project exhibition platform with one-click auth, voting and role based access. Know more..."
-imagepath: "images/innovex.png"
+imagepath: "images/projects/innovex/homepage.png"
 ---
-
 # Innovex
+
+Innovex is a Django web platform that hosts college project exhibitions online. This was implemented in 2021 in DBIT for final year students projects exhibition during COVID times when in-person exhibitions were not possible. Students showcase their work through project cards, visitors browse by department and category, and everyone can leave feedback and ratings. The platform tracks visitor stats, collects feedback data for review, and makes it easy for admins to add new projects.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [What I Built](#what-i-built)
+- [Single Click OAuth](#single-click-oauth)
+- [Project Cards with Feedback](#project-cards-with-feedback)
+- [Auto Image Extraction](#auto-image-extraction)
+- [Database Design](#database-design)
+- [Traffic Analytics](#traffic-analytics)
+- [How It Works](#how-it-works)
+- [Credits](#credits)
+- [Demo & Usage](#demo--usage)
+
+<h2 id="overview">Overview</h2>
+
+- **Goal**: Build an online exhibition platform where students can display projects, visitors can browse and rate them, and admins can manage everything from a simple backend.
+- **Role**: I worked on the database design (models), authentication flow, project display system, feedback collection, and analytics tracking.
+- **Outcome**: A working platform that hosted multiple departments' projects, collected thousands of feedback entries, and served visitors from around the world.
+
+<h2 id="tech-stack">Tech Stack</h2>
+
+![Django](https://img.shields.io/badge/Django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+![OAuth](https://img.shields.io/badge/OAuth-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+
+![Homepage](/images/projects/innovex/homepage.png)
+
+<h2 id="what-i-built">What I Built</h2>
+
+- **Single-click OAuth login** using Google authentication so visitors can sign in without creating accounts.
+- **Project cards organized by department** (IT, COMPS, EXTC, MECH) and category (Research, Product Development, Emerging Technology, Sustainability).
+- **Feedback and rating system** where visitors can rate projects and leave comments, with all data saved for review.
+- **Automatic thumbnail extraction** from YouTube video links to create project card images.
+- **Database models** designed to store projects, users, and feedback with proper relationships and constraints.
+
+<h2 id="single-click-oauth">Single Click OAuth</h2>
+
+![OAuth Login](/images/projects/innovex/login_with_OAuth.png)
+
+The platform uses Google OAuth for seamless authentication. Here's how it works:
+
+1. Visitors click the "Login with Google" button on the homepage.
+2. They're redirected to Google's authentication page where they sign in with their Google account.
+3. Once authenticated, Google sends the user back to Innovex with their email and profile info.
+4. The platform creates a Django user account automatically using the Google email.
+5. New users are prompted to complete a short form with their organization, role, and department/year (if applicable).
+6. After that, they can browse projects, leave feedback, and access all platform features without logging in again.
+
+This removes the friction of account creation and lets visitors jump straight into exploring projects.
+
+<h2 id="project-cards-with-feedback">Project Cards with Feedback</h2>
+
+![Project Cards with Feedback](/images/projects/innovex/projects_cards_with_project_domain_filter.png)
+
+Each project is displayed as a card showing:
+
+- Project title and description
+- Department and category tags
+- Team member names with LinkedIn links
+- YouTube demo video
+- Automatically extracted thumbnail image
+- Feedback form with ratings and comment fields
+
+![Feedback Form](/images/projects/innovex/project_details_with_feedback_form.png)
+
+When visitors submit feedback, the system stores:
+- Rating options 
+- Written comments
+- User's role (Student, Faculty, Alumni, Guest, etc.)
+- Organization name
+- Timestamp of submission
+- Project department and category
+
+All feedback is saved in a `Feedback` model linked to both the project and the user, making it easy for admins to review ratings, read comments, and analyze engagement by project, department, or user type.
+
+<h2 id="auto-image-extraction">Auto Image Extraction</h2>
+
+To keep project cards looking good without manual image uploads, the platform automatically extracts thumbnails from YouTube videos:
+
+1. When admins add a project, they paste the YouTube video link.
+2. The system parses the YouTube URL to extract the video ID.
+3. It uses YouTube's thumbnail API to fetch the high-quality thumbnail image (usually the frame from the middle of the video or a custom thumbnail if available).
+4. The thumbnail URL is saved in the `proj_thumbnail` field.
+5. Project cards display this image automatically, giving each project a visual preview.
+
+This saves time for admins and ensures every project has a thumbnail, even if teams don't provide one manually.
+
+<h2 id="database-design">Database Design</h2>
+
+I worked on building the models and database design for the platform. The schema includes three main models with clear relationships:
+
+**Project Model**: Stores all project information including:
+- Project title, description, and category (Research Based, Product Development, Emerging Technology, Sustainability, Community Welfare)
+- Department assignment (IT, COMPS, EXTC, MECH)
+- Team member details (up to 4 members with names and LinkedIn links)
+- Media links (YouTube video URL and Google Drive link)
+- Thumbnail image path (auto-extracted from YouTube)
+- Technical aspects field
+
+**UserModel**: Tracks visitor information with:
+- User name and email (unique constraint)
+- Designation (Student, Faculty, Alumni, Parents, Guest)
+- Organization name (DBIT or other)
+- Department and year (for students)
+
+**Feedback Model**: Links feedback to projects and users with:
+- Foreign key relationships to both Project and UserModel
+- Rating field (stored as integer)
+- User feedback comments (text field)
+- Project department and category stored for easy filtering
+- User role and organization name for analytics
+- Timestamp for tracking when feedback was submitted
+
+The database design ensures data integrity through foreign key constraints, makes it easy to query projects by department or category, and links feedback to both projects and users so admins can analyze engagement patterns and review all collected data efficiently.
+
+<h2 id="traffic-analytics">Traffic Analytics</h2>
+
+![Traffic Stats](/images/projects/innovex/Website_traffic_stats.png)
+
+The platform tracks visitor analytics to understand reach and engagement using Google Analytics
+
+This data helps organizers understand which projects are popular, which departments get the most attention, and how far the exhibition reaches. The analytics dashboard displays country-wise visitor counts and visual maps, making it easy to see the platform's global impact.
+
+<h2 id="how-it-works">How It Works</h2>
+
+- **Django models** store projects, users, and feedback with relationships between them. Projects link to departments and categories, feedback links to both projects and users.
+- **Role-based access** uses Django groups and decorators to control who can add projects, view analytics, or access admin features.
+- **Department pages** filter projects by department (IT, COMPS, EXTC, MECH) and further by category within each department.
+- **Feedback collection** happens through forms on project detail pages. Each submission creates a `Feedback` record with rating, comments, user info, and timestamp.
+- **YouTube integration** parses video URLs and fetches thumbnail images using YouTube's thumbnail API endpoints.
+- **OAuth flow** uses Django's social authentication libraries to handle Google login callbacks and user creation.
+- **Analytics tracking** captures visitor IPs, uses geolocation services to determine countries, and stores stats for dashboard display.
+
+The platform is organized around departments: each department has its own page showing projects filtered by category. Visitors can browse all projects, filter by category, click through to project details, watch YouTube videos, and leave feedback. Admins can add new projects, manage existing ones, and review all collected feedback and stats.
+
+<h2 id="credits">Credits</h2>
+
+- [Amish Thekke Parambil](https://www.linkedin.com/in/amish-thekke-parambil/) - Collaborated on this project.
+- [Kshitij Rao](https://www.linkedin.com/in/kshitij-rao-a41738192/) - Collaborated on this project.
+
+<h2 id="demo--usage">Demo & Usage</h2>
+
+- **Repository**: [GitHub Link](https://github.com/hisenberggg/Innovex-platform)
+- **Tech Details**: Django for backend, Google OAuth for authentication, YouTube API for thumbnails, SQLite/PostgreSQL for data storage, Bootstrap for responsive UI.
+- **Deployment**: This platform was deployed and used for the DBIT Innovex 2021 exhibition, hosting final year projects from multiple engineering departments (IT, COMPS, EXTC, MECH) and collecting feedback from hundreds of visitors worldwide during the COVID-19 pandemic when in-person exhibitions were not possible.

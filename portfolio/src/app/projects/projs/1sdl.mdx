@@ -2,8 +2,96 @@
 title: "Smart Door Lock System"
 techStack: ["Python","Computer Vision", "NLP"]
 description: "A door lock system that utilizes face recognition and provides live voice chat support. Know more..."
-imagepath: "images/smartdoorlock.png"
+imagepath: "images/projects/sdl/smartdoorlock.png"
 ---
-
 # Smart Door Lock
 
+Smart Door Lock is a Django web app that unlocks doors using face recognition. Admins register users by capturing their faces, and the system recognizes them at the door. It also includes a voice chatbot for live support.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [What I Built](#what-i-built)
+- [Facial Recognition](#facial-recognition)
+- [Register New User](#register-new-user)
+- [How It Works](#how-it-works)
+- [Credits](#credits)
+- [Demo & Usage](#demo--usage)
+
+<h2 id="overview">Overview</h2>
+
+- **Goal**: Build a door lock that recognizes faces, controls access with OTP, and logs all entries.
+- **Role**: I handled the facial recognition system, user registration flow, and web interface.
+- **Outcome**: A working smart lock that can identify registered users and keep track of who enters and when.
+
+<h2 id="tech-stack">Tech Stack</h2>
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
+
+![Dashboard](/images/projects/sdl/Dashboard.png)
+
+<h2 id="what-i-built">What I Built</h2>
+
+- **Face recognition system** using LBPH (Local Binary Patterns Histograms) that identifies registered users in real-time.
+- **User registration flow** where admins capture face images through the webcam and train the model automatically.
+- **Access control** that unlocks the door for recognized users and logs every entry with timestamps.
+- **Web dashboard** built with Django and Bootstrap 4 for managing users and viewing logs.
+
+<h2 id="facial-recognition">Facial Recognition</h2>
+
+![Facial Recognition in action](/images/projects/sdl/facial recognition.png)
+
+The system uses OpenCV's LBPH face recognizer to match faces. Here's how it works:
+
+1. **Face Detection**: The webcam captures video frames, and a Haar Cascade classifier finds faces in each frame.
+2. **Training**: During registration, the system captures multiple face images over 10 seconds and saves them in folders named by user.
+3. **Recognition**: The LBPH model is trained on these images and stores a trained model file. When someone approaches the door, the camera detects their face and matches it against the trained model with a confidence score.
+4. **Access Control**: If the confidence is between 4 and 85, the system recognizes the person and unlocks the door. It also logs the person's name and entry time.
+
+The LBPH algorithm works by breaking faces into small regions, computing binary patterns for each region, and creating a histogram that serves as a unique signature for each person.
+
+<h2 id="register-new-user">Register New User</h2>
+
+![Add Member Form](/images/projects/sdl/add_member.png)
+
+Only admins can register new users through a simple form:
+
+1. Admin fills out the registration form with username, password, first name, and access level.
+2. The system creates a Django user account and assigns them to a permission group (like ADMIN or VIEW_UNLOCK).
+3. A video feed starts that captures face images for 10 seconds from the webcam.
+
+![Facial Data Capture](/images/projects/sdl/register_user_facial_data.png)
+
+4. Each captured frame is saved to a dataset folder named after the user (e.g., `dataset/John/`).
+5. After capture, the FaceTrainer class processes all images: it detects faces, converts them to grayscale, and trains the LBPH model.
+6. The trained model and label mappings are saved as `face-trainner.yml` and `face-labels.pkl` files.
+7. The new user can now be recognized by the system at the door.
+
+<h2 id="how-it-works">How It Works</h2>
+
+- **Django backend** handles user accounts, permissions, and web pages.
+- **OpenCV** does face detection using Haar Cascade and recognition using LBPH.
+- **Video streaming** sends camera frames to the browser in real-time using Django's StreamingHttpResponse.
+- **Logging system** records every recognized person's name and timestamp in a database table.
+- **Access management** uses Django groups and decorators to control who can unlock or view logs.
+- **OTP system** allows authorized users to unlock via SMS OTP verification (integrated with 2Factor API).
+
+The recognition happens in real-time: the camera feed runs continuously, and each frame is checked for faces. When a face is found, the system tries to match it against all trained users. If a match is found with good confidence, the door unlocks and the event is logged.
+
+![Access Logs](/images/projects/sdl/logs.png)
+
+<h2 id="credits">Credits</h2>
+
+- **Chatbot Integration**: [Kshitij Rao](https://www.linkedin.com/in/kshitij-rao-a41738192/) - Implemented the voice assistant chatbot using TFID Vectorizer and NLTK for live chat support.
+
+![Chatbot Interface](/images/projects/sdl/chatbot.png)
+
+- **Access Management & Backend**: [Amish Thekke Parambil](https://www.linkedin.com/in/amish-thekke-parambil/) - Built the access management backend, OTP-based lock/unlock system, and the logging infrastructure that maintains visit records.
+
+<h2 id="demo--usage">Demo & Usage</h2>
+
+- **Repository**: [GitHub Link](https://github.com/hisenberggg/iot_smart_lock)
+- **Tech Details**: Bootstrap 4 for UI, Django for backend, LBPH for face recognition, TFID Vectorizer and NLTK for chatbot.

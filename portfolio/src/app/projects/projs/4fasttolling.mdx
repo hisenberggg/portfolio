@@ -1,8 +1,170 @@
 ---
 title: "Fast Tolling system"
 techStack: ["Deep learning", "Computer Vision", "Yolov4"]
-description: "A tolling software that elimiates waiting time for vehicles as opposed to traditional FastTag system."
-imagepath: "images/toll-system.jpg"
+description: "A tolling software that eliminates waiting time for vehicles as opposed to traditional FastTag system. Know more..."
+imagepath: "images/projects/fasttolling/toll-system.jpg"
 ---
+# Fast Tolling System
 
-# Fast tolling system
+Fast Tolling System is an AI-powered toll management solution that automatically identifies vehicles using license plates and deducts toll charges without requiring vehicles to stop. This was built during the DeepBlue Hackathon organized by Mastek, where we collaborated and stood among the top 8 finalists. The system uses computer vision to detect and track vehicles, reads license plates using OCR, and processes payments automatically.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [What I Built](#what-i-built)
+- [Vehicle Detection and Tracking](#vehicle-detection-and-tracking)
+- [License Plate OCR](#license-plate-ocr)
+- [Toll Payment Processing](#toll-payment-processing)
+- [Database Design](#database-design)
+- [AWS SQS Integration](#aws-sqs-integration)
+- [How It Works](#how-it-works)
+- [Credits](#credits)
+- [Demo & Usage](#demo--usage)
+
+<h2 id="overview">Overview</h2>
+
+- **Goal**: Build a toll management system that eliminates waiting queues by automatically detecting vehicles, reading license plates, and processing payments without manual intervention.
+- **Role**: I worked on OCR of license plates using Tesseract, toll money deduction from wallet system, and database handling for vehicle and payment records.
+- **Outcome**: A working prototype that demonstrated automated toll collection, achieving top 8 finalist position in the DeepBlue Hackathon organized by Mastek.
+
+<h2 id="tech-stack">Tech Stack</h2>
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![YOLOv4](https://img.shields.io/badge/YOLOv4-00FF00?style=for-the-badge&logo=yolo&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+![DeepSort](https://img.shields.io/badge/DeepSort-FF6B6B?style=for-the-badge&logo=python&logoColor=white)
+![Tesseract](https://img.shields.io/badge/Tesseract-OCR-00A86B?style=for-the-badge&logo=tesseract&logoColor=white)
+![AWS SQS](https://img.shields.io/badge/AWS%20SQS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+
+![Fast Tolling System](/images/projects/fasttolling/toll-system.jpg)
+
+<h2 id="what-i-built">What I Built</h2>
+
+- **License plate OCR** using Tesseract to extract text from detected license plate images with preprocessing for better accuracy.
+- **Toll deduction system** that automatically deducts toll charges from user wallets based on vehicle type after successful license plate recognition.
+- **Database management** using SQLite to store vehicle owner information, license plate numbers, vehicle types, wallet balances, and transaction history.
+- **Payment processing logic** that calculates toll costs by vehicle type (Car: ₹50, Bus: ₹90, Truck: ₹80, etc.) and updates wallet balances in real-time.
+
+<h2 id="vehicle-detection-and-tracking">Vehicle Detection and Tracking</h2>
+
+The system uses YOLOv4 for vehicle detection and DeepSort for multi-object tracking:
+
+1. **YOLOv4 Detection**: The system processes video frames through a pre-trained YOLOv4-tiny model that detects vehicles in real-time. The model is lightweight (416x416 input) for faster processing while maintaining accuracy.
+
+2. **DeepSort Tracking**: Once vehicles are detected, DeepSort assigns unique tracking IDs to each vehicle as it moves through the toll booth. This ensures the same vehicle isn't charged multiple times and maintains identity across frames.
+
+3. **License Plate Capture**: When a tracked vehicle reaches a specific zone (between Y coordinates 800-900 pixels), the system captures both the license plate region and the full vehicle image. These images are saved in organized folders by date, tracking ID, and location.
+
+4. **Frame Processing**: Each frame is processed at high speed (optimized for real-time performance) with bounding boxes drawn around detected vehicles and their license plates. The tracking ID and vehicle class are displayed on screen.
+
+<video controls width="100%">
+  <source src="/images/projects/fasttolling/car_tracking_deepsort.mp4" type="video/mp4" />
+</video>
+
+<h2 id="license-plate-ocr">License Plate OCR</h2>
+
+I worked on implementing the OCR system to extract license plate numbers from captured images:
+
+1. **Image Preprocessing**: Before OCR, the license plate images are cropped from the full frame and preprocessed to improve text recognition. This includes grayscale conversion, noise reduction, and contrast enhancement.
+
+2. **Tesseract OCR**: The preprocessed images are fed into Tesseract OCR engine, which extracts the text from the license plate. Tesseract is configured with appropriate settings to handle Indian license plate formats.
+
+3. **Result Storage**: The extracted license plate numbers are saved in JSON format (`lp_data.json`) along with the vehicle's tracking ID. This JSON file is used by the payment processing system to identify which vehicles need to be charged.
+
+4. **Error Handling**: The OCR system includes validation to ensure extracted text matches expected license plate patterns, filtering out invalid or unclear readings.
+
+<h2 id="toll-payment-processing">Toll Payment Processing</h2>
+
+I built the toll deduction system that processes payments automatically:
+
+1. **Vehicle Type Identification**: The system reads the vehicle type from the database using the recognized license plate number. Vehicle types include Car, Bus, Truck, LCV (Light Commercial Vehicle), Trailer, 3-wheeler, and MAV (Multi-Axle Vehicle).
+
+2. **Cost Calculation**: Each vehicle type has a predefined toll cost:
+   - Car: ₹50
+   - LCV: ₹60
+   - 3-wheeler: ₹30
+   - Bus: ₹90
+   - Truck: ₹80
+   - Trailer: ₹100
+   - MAV: ₹100
+
+3. **Wallet Deduction**: Once the vehicle type is identified, the system automatically deducts the corresponding amount from the vehicle owner's wallet balance stored in the database.
+
+4. **Transaction Logging**: Each deduction is recorded in the database, creating a transaction history that includes license plate number, amount deducted, timestamp, and remaining balance.
+
+5. **Balance Validation**: Before deduction, the system checks if sufficient balance exists. If balance is low, the transaction can be flagged for manual review or alternative payment methods.
+
+<h2 id="database-design">Database Design</h2>
+
+I handled the database design and management using SQLite:
+
+**Lp_owner Table**: Stores vehicle owner information with fields:
+- License plate number (primary identifier)
+- Vehicle type (Car, Bus, Truck, etc.)
+- Wallet balance (amount available for toll payments)
+- Owner details for reference
+
+**Transaction Records**: The system maintains transaction logs that track:
+- License plate number
+- Vehicle type
+- Toll amount charged
+- Timestamp of transaction
+- Balance before and after deduction
+
+The database is designed for fast queries using license plate numbers as the primary lookup key, ensuring quick access during toll processing. SQLite was chosen for its simplicity and portability during the hackathon, though the design can scale to PostgreSQL or MySQL for production use.
+
+<h2 id="aws-sqs-integration">AWS SQS Integration</h2>
+
+The system uses AWS Simple Queue Service (SQS) for efficient frame processing:
+
+1. **Frame Queueing**: Video frames are sent to an AWS SQS queue instead of processing them immediately. This decouples frame capture from recognition processing, allowing the system to handle variable processing loads.
+
+2. **Asynchronous Processing**: Multiple workers can process frames from the queue in parallel, improving throughput and ensuring the system doesn't drop frames during high-traffic periods.
+
+3. **Message Format**: Each frame is packaged as a message containing the image data, frame timestamp, location ID, and metadata. This allows workers to process frames in any order and track which frames have been processed.
+
+4. **Reliability**: SQS ensures no frames are lost even if processing workers fail temporarily. Messages remain in the queue until successfully processed, providing fault tolerance.
+
+5. **Scalability**: The queue-based architecture allows adding more processing workers during peak hours without modifying the core system, making it suitable for high-traffic toll booths.
+
+<h2 id="how-it-works">How It Works</h2>
+
+![System Flow Diagram](/images/projects/fasttolling/flow-diagram.png)
+
+The complete flow works as follows:
+
+1. **Video Capture**: Camera captures live video feed from the toll booth area.
+
+2. **Vehicle Detection**: YOLOv4 detects vehicles in each frame and draws bounding boxes around them.
+
+3. **Vehicle Tracking**: DeepSort assigns unique tracking IDs to each vehicle and tracks them across frames as they move through the toll zone.
+
+4. **License Plate Capture**: When a vehicle reaches the designated capture zone (specific Y-coordinate range), the system extracts the license plate region from the frame.
+
+5. **Frame Queueing**: Captured license plate images are sent to AWS SQS queue for asynchronous processing.
+
+6. **OCR Processing**: Workers pull frames from SQS, preprocess the license plate images, and use Tesseract OCR to extract license plate numbers.
+
+7. **Database Lookup**: The extracted license plate number is used to query the database and retrieve vehicle type and wallet balance.
+
+8. **Payment Deduction**: The system calculates toll cost based on vehicle type and deducts the amount from the owner's wallet balance.
+
+9. **Transaction Logging**: All deductions are logged in the database with timestamps for audit and reporting.
+
+The system eliminates the need for vehicles to stop, scan RFID tags, or wait in queues. Everything happens automatically as vehicles pass through, significantly reducing toll booth congestion and processing time.
+
+<h2 id="credits">Credits</h2>
+
+- [Siddhant Raje](https://www.linkedin.com/in/siddhant-raje/) - Implemented YOLOv4 vehicle detection and DeepSort tracking system for multi-object vehicle tracking during the DeepBlue Hackathon organized by Mastek.
+
+<h2 id="demo--usage">Demo & Usage</h2>
+
+- **Repository**: [GitHub Link](https://github.com/hisenberggg/licenseplate-identification-toll-management)
+- **Tech Details**: YOLOv4-tiny for vehicle detection, DeepSort for tracking, Tesseract for OCR, AWS SQS for queueing, SQLite for database, TensorFlow for model inference.
+- **Hackathon**: Built during DeepBlue Hackathon organized by Mastek, where we achieved top 8 finalist position.
+
+![DeepBlue Hackathon Certificate](/images/projects/fasttolling/Abhijeet-Ringe_certificate.png)
+
+- **Setup**: Install dependencies from `requirements.txt` (or `requirements-gpu.txt` for GPU support), configure video input path in `object_tracker.py`, and run the tracking system.

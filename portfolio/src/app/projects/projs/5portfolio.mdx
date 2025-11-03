@@ -1,0 +1,146 @@
+---
+title: "Portfolio Website"
+techStack: ["Next.js", "TypeScript", "MDX", "Tailwind CSS"]
+description: "A modern portfolio website with automated blog and project pages using MDX. Know more..."
+imagepath: "images/logo.png"
+---
+# Portfolio Website
+
+This portfolio website is built with Next.js and uses an automated content management system that makes it easy to add new blogs and projects. Instead of creating separate pages for each item, I just add an MDX file, and the site automatically generates the page. This keeps the codebase clean and makes content updates simple.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [What I Built](#what-i-built)
+- [Automated Content System](#automated-content-system)
+- [Dynamic Routing with [slug]](#dynamic-routing-with-slug)
+- [Gray-matter for Frontmatter Parsing](#gray-matter-for-frontmatter-parsing)
+- [How It Works](#how-it-works)
+- [Demo & Usage](#demo--usage)
+
+<h2 id="overview">Overview</h2>
+
+- **Goal**: Build a portfolio site that makes adding new content easy without writing new code each time.
+- **Role**: I designed and built the automated content system, dynamic routing, and the overall architecture.
+- **Outcome**: A maintainable portfolio where adding a new blog post or project is as simple as creating an MDX file in the right folder.
+
+<h2 id="tech-stack">Tech Stack</h2>
+
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![MDX](https://img.shields.io/badge/MDX-1B1F24?style=for-the-badge&logo=mdx&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
+<h2 id="what-i-built">What I Built</h2>
+
+- **Automated content system** that reads MDX files and generates pages automatically without manual routing.
+- **Dynamic [slug] routing** using Next.js dynamic routes that create pages for any MDX file added to the projects or blogs folders.
+- **Gray-matter integration** to parse frontmatter metadata (title, description, techStack) from MDX files.
+- **MDX rendering** using next-mdx-remote to compile and display MDX content with React components.
+- **Project listing page** that automatically discovers all MDX files and displays them as cards.
+- **Dark/light theme** with smooth transitions and persistent user preferences.
+
+<h2 id="automated-content-system">Automated Content System</h2>
+
+The portfolio uses a simple but powerful automation approach:
+
+1. **Content as Files**: All projects live in `src/app/projects/projs/` and blogs in `src/app/blogs/posts/` as MDX files.
+2. **Automatic Discovery**: The listing pages use Node.js `fs` (filesystem) to read these directories and find all MDX files.
+3. **Metadata Extraction**: Each MDX file has frontmatter (YAML at the top) that defines title, description, techStack, and image path.
+4. **Dynamic Page Generation**: Next.js creates pages automatically using the `[slug]` dynamic route pattern.
+5. **No Code Changes Needed**: To add a new project, I just create a new `.mdx` file with the right frontmatter and content.
+
+This means the entire content management is file-based, with no database or admin panel needed. It's fast, version-controlled, and easy to maintain.
+
+<h2 id="dynamic-routing-with-slug">Dynamic Routing with [slug]</h2>
+
+The site uses Next.js dynamic routing to handle any number of projects or blogs:
+
+**Structure**: 
+- `src/app/projects/[slug]/page.tsx` - Handles all project detail pages
+- `src/app/blogs/[slug]/page.tsx` - Handles all blog detail pages
+
+**How it works**:
+
+1. When someone visits `/projects/kartme`, Next.js captures `kartme` as the `slug` parameter.
+2. The `[slug]/page.tsx` file receives this parameter.
+3. It uses the slug to find the matching MDX file (`kartme.mdx` in the `projs` folder).
+4. The file is read using Node.js filesystem operations.
+5. Gray-matter parses the frontmatter and content.
+6. MDXRemote compiles the MDX to React components.
+7. The page renders with all content, images, and formatting.
+
+This single page component handles all projects and blogs, regardless of how many files exist. Adding a new item doesn't require creating a new route - the system handles it automatically.
+
+<h2 id="gray-matter-for-frontmatter-parsing">Gray-matter for Frontmatter Parsing</h2>
+
+Gray-matter is a library that extracts frontmatter (metadata) from Markdown/MDX files. It's essential for the automation:
+
+**What is Frontmatter?**
+Frontmatter is YAML metadata at the top of MDX files, enclosed in `---` markers:
+
+```yaml
+---
+title: "Kartme"
+techStack: ["Django", "Bootstrap"]
+description: "An e-commerce template"
+imagepath: "images/kartme.png"
+---
+```
+
+**How Gray-matter Helps**:
+
+1. **Separation**: It splits the file into two parts - `data` (the frontmatter as an object) and `content` (the actual MDX content).
+
+2. **Type Safety**: The parsed data can be typed in TypeScript, ensuring projects have required fields like `title` and `description`.
+
+3. **No Manual Parsing**: Without gray-matter, I'd need to write regex or custom parsers to extract metadata. Gray-matter handles this reliably.
+
+4. **Flexible**: Frontmatter can include any fields needed - arrays, nested objects, dates, etc.
+
+**Example Usage**:
+```typescript
+const { data, content } = matter(fileContents);
+// data = { title: "Kartme", techStack: [...], ... }
+// content = "# Kartme\n\nContent here..."
+```
+
+This parsed data is used to:
+- Display project cards on the listing page
+- Set page metadata (title, description)
+- Filter and sort projects
+- Pass props to components
+
+Gray-matter makes the entire system possible - without it, managing metadata would be much more complex.
+
+<h2 id="how-it-works">How It Works</h2>
+
+**Project Listing Flow** (`/projects/page.tsx`):
+1. `getProjs()` function reads the `projs` directory using `fs.readdirSync()`.
+2. For each MDX file found, it reads the file contents.
+3. Gray-matter extracts frontmatter metadata.
+4. The slug is derived from the filename (removing `.mdx` extension).
+5. All projects are returned as an array.
+6. React maps over them to render project cards.
+
+**Project Detail Flow** (`/projects/[slug]/page.tsx`):
+1. Next.js extracts the slug from the URL (e.g., `kartme` from `/projects/kartme`).
+2. `getProjBySlug()` constructs the file path: `src/app/projects/projs/${slug}.mdx`.
+3. The file is read and parsed with gray-matter.
+4. `MDXRemote` compiles the MDX content to React components.
+5. The page renders with `BlogLayout` wrapper for consistent styling.
+
+**Blogs work the same way** - just in the `blogs/posts/` directory with `blogs/[slug]/page.tsx`.
+
+The entire system is built on Next.js App Router, which supports server components, dynamic routes, and file-based routing out of the box. Combined with MDX for content and gray-matter for metadata, it creates a powerful but simple content management system.
+
+<h2 id="demo--usage">Demo & Usage</h2>
+
+- **Live Site**: Currently deployed and serving this portfolio.
+- **Tech Details**: Next.js 14 (App Router), TypeScript, MDX, Tailwind CSS, gray-matter, next-mdx-remote, Vercel Analytics.
+- **Adding New Content**: Simply create a new `.mdx` file in `projs/` or `posts/` with proper frontmatter, and the page appears automatically.
+- **Repository**: This is the portfolio repository itself.
+

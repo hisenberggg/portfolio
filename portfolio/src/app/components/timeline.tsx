@@ -50,7 +50,7 @@ const Timeline: React.FC = () => {
       title: "Software Engineering Intern",
       subtitle: "Adobe",
       date: "May 2025 - August 2025",
-      content: "",
+      content: "Built MCP-based AI agents that speed up developer query resolution across 100+ internal tools.",
       isRight: false
     },
     {
@@ -64,56 +64,56 @@ const Timeline: React.FC = () => {
       title: "Product Engineer - AI Developer",
       subtitle: "TCS - Advance Drug Development (ADD) platform",
       date: "Jan 2023 - July 2024",
-      content: "",
+      content: "Shipped GenAI copilots, redaction pipelines, and vision models that automated clinical study operations.",
       isRight: false
     },
     {
         title: "Systems Engineer",
         subtitle: "TCS - Advance Drug Development (ADD) platform",
         date: "Jun 2022 - Dec 2023",
-        content: "",
+        content: "Delivered transformer summarization services and REST APIs that powered ADD platform releases.",
         isRight: false
     },
     {
       title: "Smart India Hackathon winner",
       subtitle: "",
       date: "Jun 2022",
-      content: "",
+      content: "Built an automated inventory management system for large corporates in a 35 hour hackathon.",
       isRight: true
     },
     {
       title: "Freelance Developer",
       subtitle: "Change is us",
       date: "Feb 2022 - Mar 2022",
-      content: "",
+      content: "Automated JAMStack deployments and registration flows for Change Is Us digital campaigns.",
       isRight: false
     },
     {
       title: "Back-end Developer intern",
       subtitle: "Looseleaf",
       date: "Aug 2021 - Feb 2022",
-      content: "",
+      content: "Built Django REST APIs, authentication, and data workflows for Looseleaf's LMS platform.",
       isRight: true
     },
     {
       title: "Training and Placement coordinator",
       subtitle: "D.B.I.T",
       date: "May 2021 - Mar 2022",
-      content: "",
+      content: "Coordinated institute-wide recruitment drives and partnerships with hiring teams.",
       isRight: false
     },
     {
       title: "Technical Head",
       subtitle: "Computer Society of India - D.B.I.T",
       date: "Jun 2020 - Jun 2021",
-      content: "",
+      content: "Directed CSI-DBIT tech programs, webinars, and the chapters' web presence.",
       isRight: true
     },
     {
       title: "Technical Head",
       subtitle: "Colosseum: Techfest - D.B.I.T",
       date: "Jan 2021 - Mar 2021",
-      content: "",
+      content: "Managed the Colosseum 2021 web platform using Django, Bootstrap, and Azure CI/CD.",
       isRight: false
     },
     {

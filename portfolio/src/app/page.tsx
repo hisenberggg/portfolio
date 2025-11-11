@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Timeline from "./components/timeline";
 import { FaLinkedinIn, FaGithub, FaAngleDoubleDown, FaFileDownload, FaEnvelope, FaCopy, FaCheck } from "react-icons/fa";
-import { SiTypescript, SiNextdotjs, SiTailwindcss, SiReact, SiNodedotjs, SiPython, SiTensorflow, SiPytorch, SiAmazonaws, SiDocker, SiPostgresql, SiMongodb, SiGit, SiGooglecloud, SiMicrosoftazure, SiKubernetes, SiTerraform, SiApacheairflow, SiApachekafka, SiRedis, SiJest, SiCypress, SiStorybook, SiTableau, SiPowerbi, SiAuth0 } from "react-icons/si";
+import { SiTypescript, SiNextdotjs, SiTailwindcss, SiReact, SiNodedotjs, SiPython, SiTensorflow, SiPytorch, SiAmazonaws, SiDocker, SiPostgresql, SiMongodb, SiGit, SiFastapi, SiMicrosoftazure, SiKubernetes, SiRedis } from "react-icons/si";
 import { FaJava } from "react-icons/fa";
 import type { IconType } from "react-icons";
 import Image from 'next/image';
@@ -30,6 +30,7 @@ const skills: { name: string; icon: IconType; color: string }[] = [
   { name: "PostgreSQL", icon: SiPostgresql, color: "#336791" },
   { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
   { name: "Git", icon: SiGit, color: "#F05032" },
+  { name: "FastAPI", icon: SiFastapi, color: "#009688" },
   { name: "Microsoft Azure", icon: SiMicrosoftazure, color: "#0078D4" },
   { name: "Kubernetes", icon: SiKubernetes, color: "#326CE5" },
   { name: "Redis", icon: SiRedis, color: "#DC382D" }

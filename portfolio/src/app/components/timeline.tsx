@@ -40,6 +40,13 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, subtitle, date, cont
 const Timeline: React.FC = () => {
   const timelineItems: TimelineItemProps[] = [
     {
+      title: "Certified AWS Solution Architect - Associate",
+      subtitle: "AWS",
+      date: "July 2025 - July 2028",
+      content: "",
+      isRight: true
+    },
+    {
       title: "Software Engineering Intern",
       subtitle: "Adobe",
       date: "May 2025 - August 2025",
@@ -110,22 +117,8 @@ const Timeline: React.FC = () => {
       isRight: false
     },
     {
-      title: "Reporting Head",
-      subtitle: "DOMAIN: Math Club - D.B.I.T",
-      date: "Jun 2020 - Jun 2021",
-      content: "",
-      isRight: true
-    },
-    {
-      title: "Publicity Head",
-      subtitle: "Physics Club - D.B.I.T",
-      date: "Jun 2020 - Jun 2021",
-      content: "",
-      isRight: false
-    },
-    {
       title: "Under-grad student",
-      subtitle: "Don Bosco Institute of Technology (D.B.I.T)",
+      subtitle: "Mumbai University - D.B.I.T",
       date: "Jun 2018 - May 2022",
       content: "",
       isRight: true

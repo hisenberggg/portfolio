@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Timeline from "./components/timeline";
 import { FaLinkedinIn, FaGithub, FaAngleDoubleDown, FaFileDownload, FaEnvelope, FaCopy, FaCheck } from "react-icons/fa";
+import { SiTypescript, SiNextdotjs, SiTailwindcss, SiReact, SiNodedotjs, SiPython, SiTensorflow, SiPytorch, SiAmazonaws, SiDocker, SiPostgresql, SiMongodb, SiGit } from "react-icons/si";
+import type { IconType } from "react-icons";
 import Image from 'next/image';
 import { Space_Mono } from 'next/font/google';
 
@@ -11,6 +13,22 @@ const spaceMono = Space_Mono({
   subsets: ['latin'],
   display: 'swap',
 });
+
+const skills: { name: string; icon: IconType; color: string }[] = [
+  { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
+  { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
+  { name: "React", icon: SiReact, color: "#61DAFB" },
+  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#38BDF8" },
+  { name: "Node.js", icon: SiNodedotjs, color: "#3C873A" },
+  { name: "Python", icon: SiPython, color: "#3776AB" },
+  { name: "TensorFlow", icon: SiTensorflow, color: "#FF6F00" },
+  { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C" },
+  { name: "AWS", icon: SiAmazonaws, color: "#FF9900" },
+  { name: "Docker", icon: SiDocker, color: "#2496ED" },
+  { name: "PostgreSQL", icon: SiPostgresql, color: "#336791" },
+  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
+  { name: "Git", icon: SiGit, color: "#F05032" },
+];
 
 
 const Home = () => {
@@ -56,6 +74,7 @@ const Home = () => {
     document.body.removeChild(link);
   };
   return (
+    <>
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 pt-24">
       {/* Profile Image */}
       <div className="flex justify-center mb-8">
@@ -132,6 +151,40 @@ const Home = () => {
 
       <Timeline/>
 
+      <div id="skills" className="w-full py-12 mt-12">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center mb-3">Skills &amp; Tools</h2>
+          <p className="text-center text-lg text-[var(--text-muted)] mb-10">
+            Technologies I use to build and ship intelligent, user-focused products.
+          </p>
+          <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center gap-6 max-w-5xl">
+              {skills.map((skill, index) => {
+                const Icon = skill.icon;
+                const durations = [5.5, 6.5, 7.5, 8.5];
+                const delays = [0, 0.2, 0.4, 0.6];
+                return (
+                  <div key={skill.name} className="group relative flex flex-col items-center">
+                    <div
+                      className="flex items-center justify-center w-20 h-20 rounded-2xl bg-[var(--surface)] border border-gray-300 shadow-lg transition-shadow duration-300 group-hover:shadow-xl"
+                      style={{
+                        animation: `float ${durations[index % durations.length]}s ease-in-out infinite`,
+                        animationDelay: `${delays[index % delays.length]}s`,
+                      }}
+                    >
+                      <Icon className="w-10 h-10" style={{ color: skill.color }} aria-hidden />
+                    </div>
+                    <span className="mt-3 text-sm font-medium text-[var(--text-muted)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {skill.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="contact" className="w-full py-12 mt-16">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-8">Get In Touch</h2>
@@ -181,7 +234,20 @@ const Home = () => {
       </div>
 
     </div>
-    
+    <style jsx global>{`
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+    `}</style>
+    </>
   )
 }
 

@@ -121,7 +121,7 @@ const Home = () => {
         </div>
 
         {/* Resume and Journey buttons */}
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center gap-4 flex-wrap">
           <button 
             onClick={handleDownload}
             className="flex items-center justify-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-[var(--surface)] border border-gray-300 rounded-lg shadow-md hover:bg-[var(--accent)] hover:border-[var(--accent)] transition-all duration-300 w-36"
@@ -140,6 +140,14 @@ const Home = () => {
           >
             <FaAngleDoubleDown className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
             <span className="text-sm sm:text-base font-medium">My Journey</span>
+          </a>
+
+          <a 
+            href="#skills"
+            className="flex items-center justify-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-[var(--surface)] border border-gray-300 rounded-lg shadow-md hover:bg-[var(--accent)] hover:border-[var(--accent)] transition-all duration-300 w-36"
+          >
+            <FaAngleDoubleDown className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
+            <span className="text-sm sm:text-base font-medium">Skills</span>
           </a>
         </div>
       </div>

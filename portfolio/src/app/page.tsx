@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import Timeline from "./components/timeline";
 import { FaLinkedinIn, FaGithub, FaAngleDoubleDown, FaFileDownload, FaEnvelope, FaCopy, FaCheck } from "react-icons/fa";
-import { SiTypescript, SiNextdotjs, SiTailwindcss, SiReact, SiNodedotjs, SiPython, SiTensorflow, SiPytorch, SiAmazonaws, SiDocker, SiPostgresql, SiMongodb, SiGit } from "react-icons/si";
+import { SiTypescript, SiNextdotjs, SiTailwindcss, SiReact, SiNodedotjs, SiPython, SiTensorflow, SiPytorch, SiAmazonaws, SiDocker, SiPostgresql, SiMongodb, SiGit, SiGooglecloud, SiMicrosoftazure, SiKubernetes, SiTerraform, SiApacheairflow, SiApachekafka, SiRedis, SiJest, SiCypress, SiStorybook, SiTableau, SiPowerbi, SiAuth0 } from "react-icons/si";
+import { FaJava } from "react-icons/fa";
 import type { IconType } from "react-icons";
 import Image from 'next/image';
 import { Space_Mono } from 'next/font/google';
@@ -15,19 +16,23 @@ const spaceMono = Space_Mono({
 });
 
 const skills: { name: string; icon: IconType; color: string }[] = [
+  { name: "Python", icon: SiPython, color: "#3776AB" },
+  { name: "TensorFlow", icon: SiTensorflow, color: "#FF6F00" },
+  { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C" },
+  { name: "AWS", icon: SiAmazonaws, color: "#FF9900" },
+  { name: "Java", icon: FaJava, color: "#E76F00" },
   { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
   { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
   { name: "React", icon: SiReact, color: "#61DAFB" },
   { name: "Tailwind CSS", icon: SiTailwindcss, color: "#38BDF8" },
   { name: "Node.js", icon: SiNodedotjs, color: "#3C873A" },
-  { name: "Python", icon: SiPython, color: "#3776AB" },
-  { name: "TensorFlow", icon: SiTensorflow, color: "#FF6F00" },
-  { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C" },
-  { name: "AWS", icon: SiAmazonaws, color: "#FF9900" },
   { name: "Docker", icon: SiDocker, color: "#2496ED" },
   { name: "PostgreSQL", icon: SiPostgresql, color: "#336791" },
   { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
   { name: "Git", icon: SiGit, color: "#F05032" },
+  { name: "Microsoft Azure", icon: SiMicrosoftazure, color: "#0078D4" },
+  { name: "Kubernetes", icon: SiKubernetes, color: "#326CE5" },
+  { name: "Redis", icon: SiRedis, color: "#DC382D" }
 ];
 
 
@@ -161,10 +166,7 @@ const Home = () => {
 
       <div id="skills" className="w-full py-12 mt-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-3">Skills &amp; Tools</h2>
-          <p className="text-center text-lg text-[var(--text-muted)] mb-10">
-            Technologies I use to build and ship intelligent, user-focused products.
-          </p>
+          <h2 className="text-4xl font-bold text-center mb-3">Skills &amp; Tools</h2><br />
           <div className="flex justify-center">
             <div className="flex flex-wrap justify-center gap-6 max-w-5xl">
               {skills.map((skill, index) => {

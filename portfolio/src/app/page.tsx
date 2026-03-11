@@ -2,8 +2,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Timeline from "./components/timeline";
-import { FaLinkedinIn, FaGithub, FaAngleDoubleDown, FaFileDownload, FaEnvelope, FaCopy, FaCheck } from "react-icons/fa";
-import { SiTypescript, SiNextdotjs, SiTailwindcss, SiReact, SiNodedotjs, SiPython, SiTensorflow, SiPytorch, SiAmazonaws, SiDocker, SiPostgresql, SiMongodb, SiGit, SiFastapi, SiMicrosoftazure, SiKubernetes, SiRedis } from "react-icons/si";
+import { FaLinkedinIn, FaGithub, FaAngleDoubleDown, FaFileDownload, FaEnvelope, FaCopy, FaCheck, FaBrain, FaRobot } from "react-icons/fa";
+import { SiReact, SiNodedotjs, SiPython, SiTensorflow, SiPytorch, SiAmazonaws, SiDocker, SiPostgresql, SiFastapi, SiMicrosoftazure, SiKubernetes, SiRedis, SiDjango, SiFlask, SiOpencv, SiApachekafka } from "react-icons/si";
 import { FaJava } from "react-icons/fa";
 import type { IconType } from "react-icons";
 import Image from 'next/image';
@@ -19,18 +19,19 @@ const skills: { name: string; icon: IconType; color: string }[] = [
   { name: "Python", icon: SiPython, color: "#3776AB" },
   { name: "TensorFlow", icon: SiTensorflow, color: "#FF6F00" },
   { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C" },
+  { name: "LangChain", icon: FaBrain, color: "#1C3C3C" },
+  { name: "LangGraph", icon: FaRobot, color: "#1C3C3C" },
+  { name: "OpenCV", icon: SiOpencv, color: "#5C3EE8" },
   { name: "AWS", icon: SiAmazonaws, color: "#FF9900" },
   { name: "Java", icon: FaJava, color: "#E76F00" },
-  { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
-  { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
   { name: "React", icon: SiReact, color: "#61DAFB" },
-  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#38BDF8" },
   { name: "Node.js", icon: SiNodedotjs, color: "#3C873A" },
   { name: "Docker", icon: SiDocker, color: "#2496ED" },
   { name: "PostgreSQL", icon: SiPostgresql, color: "#336791" },
-  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
-  { name: "Git", icon: SiGit, color: "#F05032" },
   { name: "FastAPI", icon: SiFastapi, color: "#009688" },
+  { name: "Django", icon: SiDjango, color: "#092E20" },
+  { name: "Flask", icon: SiFlask, color: "#000000" },
+  { name: "Kafka", icon: SiApachekafka, color: "#231F20" },
   { name: "Microsoft Azure", icon: SiMicrosoftazure, color: "#0078D4" },
   { name: "Kubernetes", icon: SiKubernetes, color: "#326CE5" },
   { name: "Redis", icon: SiRedis, color: "#DC382D" }

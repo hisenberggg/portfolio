@@ -174,6 +174,7 @@ const Home = () => {
                 const Icon = skill.icon;
                 const durations = [5.5, 6.5, 7.5, 8.5];
                 const delays = [0, 0.2, 0.4, 0.6];
+                const iconColor = skill.name === "Kafka" ? "var(--text-muted)" : skill.color;
                 return (
                   <div key={skill.name} className="group relative flex flex-col items-center">
                     <div
@@ -183,7 +184,7 @@ const Home = () => {
                         animationDelay: `${delays[index % delays.length]}s`,
                       }}
                     >
-                      <Icon className="w-10 h-10" style={{ color: skill.color }} aria-hidden />
+                      <Icon className="w-10 h-10" style={{ color: iconColor }} aria-hidden />
                     </div>
                     <span className="mt-3 text-sm font-medium text-[var(--text-muted)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       {skill.name}

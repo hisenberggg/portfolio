@@ -1,0 +1,164 @@
+---
+title: "Orange Bot"
+techStack: ["Python", "Next.js", "LangGraph", "ChromaDB", "MCP"]
+description: "Agentic RAG based Chat interface for everything Syracuse. One stop for all queries. Know more..."
+imagepath: "images/projects/orangebot/chat.png"
+---
+
+# Orange Bot
+
+Orange Bot is a Syracuse University agentic chat that uses **agentic RAG**. It handles several domains: **wiki**, **transit**, **calendar**, **general** small talk, and **web** search. Wiki answers go through **multi-hop RAG with evaluation** so replies stay accurate, with **web search** fallback when the wiki answer is inadequate. You get **persistence inside a thread and across saved chats**. The UI is **Next.js** with **SSE** streaming.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Agent Architecture and Flow](#agent-architecture-and-flow)
+- [Main Components](#main-components)
+- [Memory](#memory)
+- [Tools and Agents in Detail](#tools-and-agents-in-detail)
+- [Frontend (Short)](#frontend-short)
+- [Streaming](#streaming)
+- [Multi-Turn Behavior and Wiki](#multi-turn-behavior-and-wiki)
+- [Ongoing and Future Goals](#ongoing-and-future-goals)
+- [Demo and Usage](#demo-and-usage)
+
+<h2 id="overview">Overview</h2>
+
+- **Goal**: Give students and staff one chat surface for wiki procedures, academic dates, bus and shuttle times, light chitchat, and open-web questions when local data is not enough.
+
+<h2 id="tech-stack">Tech Stack</h2>
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
+
+Backend: **Python 3.11+**, **FastAPI**, **LangGraph**, **LangChain** OpenAI chat models, **SQLite** chats and checkpoints (Postgres for production), **JWT** auth with a local JSON user store. Wiki retrieval: **FastMCP** server, **ChromaDB** Wiki RAG, **Confluence REST** for listing, search, and page fetch. Web route: **Tavily** search and extract. Frontend: **Next.js** (App Router), **react-markdown**, custom CSS modules. **LangSmith** tracing for monitoring and evaluation.
+
+<h2 id="agent-architecture-and-flow">Agent Architecture and Flow</h2>
+![Flow Diagram](/images/projects/orangebot/flow_diagram.png)
+
+**High-level flow**
+
+1. The client sends a user message with a `thread_id` that owns LangGraph checkpoint state.
+2. The **route** node runs one structured LLM call (`gpt-4o-mini`) on the **latest user message only** for speed. It sets `route` and `route_rationale`.
+3. The graph jumps to **wiki**, **calendar**, **transit**, **general**, or **web**.
+4. **Wiki** runs the wiki subgraph wrapper: ReAct over MCP tools, then an evaluator. If the answer is still bad after three tries, the planner routes execution to **web** without changing the stored `route` from `wiki` (escalation).
+5. Leaf nodes set `final_response` and append an **AIMessage** so checkpoints grow for the next turn.
+
+![Flow Diagram](/images/projects/orangebot/UI.png)
+<h2 id="memory">Memory</h2>
+
+**Short-term memory (conversation state)**
+
+- Each **chat thread** keeps the full back-and-forth on disk so the next message in that thread can see earlier user and assistant turns. The app uses a per-thread checkpoint store under **`data/`** (you can point it elsewhere with **`DATA_DIR`**).
+
+**Long-term memory - Mem0 (cross-chat user memory)**
+
+- **Mem0** : remember stable facts about a user across threads (for example program or preferences) and inject them when answering.
+
+**Saved threads and messages**
+
+- Thread titles and message history live in a local SQLite file so the sidebar and transcripts survive refresh. Replies are written **after** streaming finishes **in the background** so the stream is not held up.
+
+
+<h2 id="tools-and-agents-in-detail">Tools and Agents</h2>
+
+**Planner (router agent)**
+
+- Not a tool user. One **`ChatOpenAI`** call that does the initial planning and routing.**.
+- Routes: **wiki** (Answers scope procedures and policy), **calendar** (registrar dates), **transit** (shuttles and Centro style schedules), **general** (greetings, thanks, what can you do), **web** (news, broad facts, anything that needs live search).
+
+
+**Wiki agent, tool, eval, and wiki-side optimizations**
+
+- **Preretrieval (offline)**: The **wiki indexer** (`python -m mcp_servers.wiki.indexer`) walks Confluence pages ahead of time, runs **chunking** on page HTML into sized snippets with titles and sections, then **embedding** with the configured OpenAI embedding model and stores vectors in **Chroma**. At question time, retrieval is a vector lookup over those chunks instead of rereading whole sites from scratch.
+- **MCP tool `answers_retrieve`**: The wiki agent calls this to pull **evidence snippets** (titles, sections, text, links) from Syracuse Answers. With an index in place, the query is **embedded** and matched to **pre-chunked** wiki text. If that path is empty or unavailable, it falls back to **live Confluence search**, page fetch, and the same **chunking** as the indexer (no embedding step on that path). The model is told to cite the **exact URLs** from the tool output.
+- **ReAct loop**: The agent can call the tool, read results, and reason in multiple steps inside one hop.
+- **Multi-hop evaluation**: After each wiki attempt, a **judge** checks whether the answer clearly fits the question. If not, up to **three** tries run with **rephrased searches** (broader or more hits when suggested). If it still fails, the flow **escalates to web search** while the user-facing route can still read as wiki in the UI.
+- **Why wiki feels fast when indexed**: **Pre-indexed Chroma** cuts repeated round trips to Confluence for every question. **CQL fallback** keeps the tool working without an index. The MCP server avoids **broken stdio** when heavy libraries would print to stdout during import. The **indexer** pulls pages in **batches** and writes chunks in **batches** so large wikis do not load all at once; you can do a **full rebuild** or an **incremental** add-on run.
+
+**Calendar agent (node)**
+
+- **Preretrieval via script**: **`scripts/scrape_calendar`** (run `python -m scripts.scrape_calendar`) **fetches** the official academic calendar HTML pages, **parses** tables and lists into a **structured JSON** file (**`Data/calendar.json`**) with events, dates, and semester labels. That is the offline prep step so the model does not scrape the web on every question.
+- **At chat time**: **No live scraping.** The API **reads `calendar.json` from disk** (cached in memory after the first read), so answers are quick and stable.
+
+**Transit agent (node)**
+
+- **Preretrieval via script**: **`scripts/scrape_bus_schedules`** (run `python -m scripts.scrape_bus_schedules`) **downloads** shuttle and bus **PDFs**, **extracts** timetable text with **pdfplumber**, and **normalizes** routes, stops, trip lines, notes, and source links into **`Data/bus_schedules.json`**. That offline pass turns noisy PDFs into clean text the LLM can follow.
+- **At chat time**: The transit node **loads local JSON** (also cached) plus **current date and time** so schedule answers match “today” without hitting external sites per chat.
+
+**General agent (node)**
+
+- Short replies only; reminds users what the app can route to; does not pretend to browse the web.
+
+**Web agent (node)**
+
+- **`fetch_web_context`**: Tavily **search** (advanced depth, configurable max results) then **extract** on URLs, capped total characters (**`TAVILY_CONTEXT_MAX_CHARS`**). If the key is missing or errors occur, the model sees an empty or warning excerpt block.
+- Answer model **`gpt-4o-mini`** with **`WEB_SYSTEM_PROMPT_BASE`** plus excerpts, plus trimmed chat history.
+
+![Web Search](/images/projects/orangebot/attractions_websearch.png)
+
+<h2 id="frontend-short">Frontend</h2>
+
+- **Next.js** single page: after JWT login or signup, **`listChats`** and **`createChat`** align the sidebar with **`thread_id`** values from the API.
+- **`streamMessage`** calls **`POST /chat/stream`** with the bearer token and reads **SSE** events (`thinking`, `delta`, `done`, `error`).
+- **`ChatWindow`** shows user and assistant bubbles, markdown for assistant text, optional **route** badge on stored messages.
+- **`ThinkingSteps`** lists route choice, status lines (including wiki retry and web escalation), and tool call summaries while streaming; it can auto-collapse when streaming ends.
+- **`AuthModal`**, **`Sidebar`**: standard thread switch and new chat.
+
+<h2 id="streaming">Streaming</h2>
+
+- The API streams **Server-Sent Events** to the browser: **thinking** lines first (route picked, plain-English status, tool names and short inputs), then **token chunks** for the visible answer.
+- **Wiki multi-hop**: If the wiki retries after you already saw partial text, the server **clears** that partial stream and shows a **retry** status so old and new answers do not stick together.
+- The **evaluator** model runs in the pipeline but **its text is not streamed** to the user.
+- When wiki **escalates to web**, you see a short **fallback** status, then the **web** answer streams as usual.
+- When the stream finishes cleanly, the **final reply** is saved to chat history **in the background** so saving does not slow the last bytes.
+
+<h2 id="multi-turn-behavior-and-wiki">Multi-Turn Behavior Wiki</h2>
+
+This is the main story for conversational quality.
+
+**Checkpoints and merging**
+
+- Each HTTP request sends **one new HumanMessage**. LangGraph merges into **`state["messages"]`** for that **`thread_id`**, so the checkpoint holds the full alternating thread.
+
+**Routing versus context**
+
+- **Classification** always looks at **only the latest user message**. Follow-ups like "what about graduates?" might be misclassified unless you later extend **`_route_node`** to pass recent messages. The README notes this tradeoff openly.
+
+**How leaf nodes see history**
+
+- **Calendar**, **transit**, **general**, and **web** call **`build_system_plus_history`**, which attaches a **SystemMessage** then the last up to **20** Human or AI messages (no tool messages in the trimmed list). So follow-up questions can use prior user and assistant wording in the same session.
+
+**How wiki sees history (special case)**
+
+- Wiki ReAct still receives **one HumanMessage per hop** (the subgraph expects a simple turn), but the **text** inside that message is built by **`wiki_question_with_context`**:
+  - Take all Human and AI messages from the checkpoint.
+  - Last message must be the current user; everything before is "prior conversation."
+  - Prior turns are trimmed to **16** messages, then formatted as labeled lines: **User:** ... and **Assistant:** ...
+  - A header tells the model to use prior chat to interpret follow-ups, and the **current question** is repeated on the final line.
+- So **multi-turn wiki** works by **injecting dialogue context into a single string** for retrieval and answering, not by passing raw parallel messages into the ReAct agent. The **evaluator** judges the wiki answer against that same enriched **original_question** string, so "it" and short follow-ups are tied to earlier turns when the checkpoint has them.
+
+**Wiki escalation and labels**
+
+- After three inadequate evaluations, the graph runs **web** but the stored route for the user can still be **wiki** if the API includes route on **done** (the README states streaming shows thinking for the web step while route may remain wiki). The UI **thinking** line explains that the wiki had no sufficient answer.
+![Flow Diagram](/images/projects/orangebot/multihop.png)
+
+<h2 id="ongoing-and-future-goals">Ongoing and Future Goals</h2>
+
+These items are **not fully implemented** in the codebase as described here; they are natural next steps.
+
+**Redis and semantic caching**
+
+- **Redis** can back **semantic caching**: embed or fingerprint a query, map **similar questions** to a **cached answer or retrieved snippets**, and return a faster response when a close match exists. That cuts repeat latency for popular or paraphrased questions. You can also cache **Tavily** or **wiki retrieval** results with a TTL, and use Redis for **sessions or rate limits** if you run more than one API worker.
+
+**User feedback reinforcement**
+
+- Capture **thumbs up or down** (and optional free text) on assistant messages in the UI, store per message id in the database, and later use that signal to **fine-tune routing**, **adjust wiki evaluator thresholds**, or **weight retrieval**. Another path is **RLHF** or **DPO** style training on approved answers, or simple **bandit** routing (send ambiguous queries to the path that historically satisfied similar users).
+
+<h2 id="demo-and-usage">Demo and Usage</h2>
+
+- **Repository**: [github.com/hisenberggg/OrangeBot](https://github.com/hisenberggg/OrangeBot) for **clone, installation, environment setup, and how to run** the API and frontend. Follow the **`README.md`** in that repo for **`requirements.txt`**, **`.env`**, wiki indexer, and scrapers.
